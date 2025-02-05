@@ -56,15 +56,15 @@
     cursor: pointer;
     font-weight: bold;
     height: 5em;
-    justify-content: center;
     display: flex;
+    justify-content: center;
     align-content: center;
     align-items: center;
 }
 
 @media (max-width: 800px) {
     .word {
-        padding: 1em;
+        padding: 0.5em;
     }
 
     .header {
@@ -74,7 +74,7 @@
 
 @media (max-width: 565px) {
     .word {
-        padding: 0.75em;
+        padding: 0.25em;
         font-size: small;
     }
 

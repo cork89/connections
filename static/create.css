@@ -164,8 +164,12 @@ body {
 
 @media (max-width: 700px) {
     .cat-word-grid {
-        margin-top: 2em;
+        margin-top: 1em;
         margin-left: 0em;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        grid-row-gap: 10px;
+        text-align: left;
     }
 
     .colors-item {

@@ -1,0 +1,56 @@
+<svg class="gameOverSvg" viewBox="0 0 64 64" width="256" height="256"
+    xmlns="http://www.w3.org/2000/svg">
+    <g class="first-icon">
+        <!-- Head -->
+        <rect x="24" y="8" width="16" height="16" fill="#7CB3FF" />
+        <rect x="20" y="12" width="4" height="8" fill="#7CB3FF" />
+        <rect x="40" y="12" width="4" height="8" fill="#7CB3FF" />
+        <rect x="28" y="14" width="2" height="2" fill="black" />
+        <rect x="34" y="14" width="2" height="2" fill="black" />
+        <rect x="30" y="18" width="4" height="2" fill="black" />
+
+        <!-- Body -->
+        <rect x="22" y="24" width="20" height="16" fill="#0057B7" />
+
+        <!-- Arms -->
+        <rect x="14" y="24" width="8" height="6" fill="#7CB3FF" />
+        <rect x="42" y="24" width="8" height="6" fill="#7CB3FF" />
+        <rect x="12" y="18" width="4" height="8" fill="#7CB3FF" />
+        <rect x="48" y="18" width="4" height="8" fill="#7CB3FF" />
+
+        <!-- Legs -->
+        <rect x="24" y="40" width="6" height="12" fill="#7CB3FF" />
+        <rect x="34" y="40" width="6" height="12" fill="#7CB3FF" />
+
+        <!-- Feet -->
+        <rect x="22" y="52" width="10" height="4" fill="black" />
+        <rect x="32" y="52" width="10" height="4" fill="black" />
+    </g>
+    <g class="second-icon">
+        <!-- Head -->
+        <rect x="24" y="8" width="16" height="16" fill="#7CB3FF" />
+        <rect x="20" y="12" width="4" height="8" fill="#7CB3FF" />
+        <rect x="40" y="12" width="4" height="8" fill="#7CB3FF" />
+        <rect x="28" y="14" width="2" height="2" fill="black" />
+        <rect x="34" y="14" width="2" height="2" fill="black" />
+        <rect x="30" y="18" width="4" height="2" fill="black" />
+
+        <!-- Body -->
+        <rect x="22" y="24" width="20" height="16" fill="#0057B7" />
+
+        <!-- Arms -->
+        <rect x="14" y="24" width="8" height="6" fill="#7CB3FF" />
+        <rect x="42" y="24" width="8" height="6" fill="#7CB3FF" />
+
+        <rect x="8" y="24" width="8" height="4" fill="#7CB3FF" />
+        <rect x="48" y="24" width="8" height="4" fill="#7CB3FF" />
+
+        <!-- Legs -->
+        <rect x="24" y="40" width="6" height="12" fill="#7CB3FF" />
+        <rect x="34" y="40" width="6" height="12" fill="#7CB3FF" />
+
+        <!-- Feet -->
+        <rect x="22" y="52" width="10" height="4" fill="black" />
+        <rect x="32" y="52" width="10" height="4" fill="black" />
+    </g>
+</svg>

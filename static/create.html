@@ -1,0 +1,75 @@
+{{ define "head" }}
+<link rel="stylesheet" href="/static/create.css">
+{{end}}
+{{ define "game" }}
+<div id="cat">
+    <div class="colors">
+        <div class="colors-item yellow">
+            <div class="colors-title">
+                <span class="title"><span class="hotkey">Y</span>ellow</span><img height="24px" width="24px"
+                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit yellow category">
+            </div>
+            <div class="cat-word-grid">
+                <span><b>Category:</b> </span><span id="category-yellow" class="uppercase">tbd</span>
+                <span><b>Words:</b> </span><span id="words-yellow" class="uppercase">tbd</span>
+            </div>
+        </div>
+        <div class="colors-item green">
+            <div class="colors-title">
+                <span class="title"><span class="hotkey">G</span>reen</span><img height="24px" width="24px"
+                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit green category">
+            </div>
+            <div class="cat-word-grid">
+                <span><b>Category:</b></span><span id="category-green" class="uppercase">tbd</span>
+                <span><b>Words:</b> </span><span id="words-green" class="uppercase">tbd</span>
+            </div>
+        </div>
+        <div class="colors-item blue">
+            <div class="colors-title">
+                <span class="title"><span class="hotkey">B</span>lue</span><img height="24px" width="24px"
+                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit blue category">
+            </div>
+            <div class="cat-word-grid">
+                <span><b>Category:</b> </span><span id="category-blue" class="uppercase">tbd</span>
+                <span><b>Words:</b> </span><span id="words-blue" class="uppercase">tbd</span>
+            </div>
+        </div>
+        <div class="colors-item purple">
+            <div class="colors-title">
+                <span class="title"><span class="hotkey">P</span>urple</span><img height="24px" width="24px"
+                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit purple category">
+            </div>
+            <div class="cat-word-grid">
+                <span><b>Category:</b> </span><span id="category-purple" class="uppercase">tbd</span>
+                <span><b>Words:</b> </span><span id="words-purple" class="uppercase">tbd</span>
+            </div>
+        </div>
+    </div>
+    <div class="inputs-grid">
+        <div class="category-container">
+            <input type="text" id="category-input" placeholder="Enter category (enter/return to complete, 40 characters max)"
+                disabled>
+        </div>
+        <div class="word-container">
+            <input type="text" id="word-input"
+                placeholder="Enter words (comma separated, 4 total, 20 characters each max)" disabled>
+        </div>
+        {{if eq .Debug true}}
+        <div class="input-container">
+            <input type="text" id="gameId-input" placeholder="game name">
+        </div>
+        {{end}}
+        <button onclick="saveCurrentCategories()" id="save-categories-button" disabled>Save</button>
+    </div>
+    <div class="submit-warning" style="visibility: hidden;">
+        <img width="24px" height="24px" src="/static/info.svg">
+        <span id="warning-message"></span>
+        <span class="submit-warning-close" onclick="closeWarning(this)">x</span>
+    </div>
+    <div class="buttons">
+        <button onclick="submitCategories()" id="submit" disabled>Submit</button>
+    </div>
+
+    <script src="/static/create.js"></script>
+</div>
+{{end}}

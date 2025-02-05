@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'nyt-franklin';
+    src: url('/static/franklin-normal-600.ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'nyt-franklin';
+    src: url('/static/franklin-normal-700.ttf');
+    font-weight: 700;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.purple {
+    background-color: #ba81c6;
+}
+
+.blue {
+    background-color: #b2c4f0;
+}
+
+.green {
+    background-color: #a1c45b;
+}
+
+.yellow {
+    background-color: #f8df6d;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.buttons button {
+    margin: 0 5px;
+    background-color: white;
+    border-radius: 50px;
+    border-color: black;
+    border-style: solid;
+    padding: 1em 1.5em;
+    cursor: pointer;
+    font-family: 'nyt-franklin';
+    font-size: medium;
+    color: black;
+}
+
+.buttons button[disabled] {
+    border-color: #6d6d6d;
+    cursor: default;
+    color: #6d6d6d;
+}

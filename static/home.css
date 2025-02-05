@@ -1,0 +1,59 @@
+p {
+    font-family: "nyt-franklin";
+    font-size: 40px;
+    text-align: center;
+}
+
+.homebody {
+    width: 800px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* border-left: 1px solid rgb(160, 160, 160);
+    border-right: 1px solid rgb(160, 160, 160);
+    height: 100vh; */
+    background-color: white;
+    margin: 0 auto;
+}
+
+.homecopy {
+    margin-top: 10em;
+}
+
+.homecopy h1 {
+    font-family: 'nyt-franklin';
+    text-align: center;
+}
+
+@media (max-height:750px) {
+    .homecopy {
+        margin-top: 4em;
+    }
+}
+
+.homehero {
+    display: flex;
+    justify-content: center;
+    margin-top: 3em;
+}
+
+.homehero img {
+    width: 600px;
+    max-width: 90%
+}
+
+.buttons {
+    margin-top: 3em;
+}
+
+.buttons a {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.buttons a:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}

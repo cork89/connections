@@ -1,0 +1,26 @@
+{{define "head"}}
+<link rel="stylesheet" href="/static/game.css">
+{{end}}
+
+
+{{ define "game" }}
+<div id="board">
+    {{template "board" .}}
+</div>
+<div class="buttons">
+    <button id="shuffleButton" onclick="shuffle()">Shuffle</button>
+    <button id="deselectButton" onclick="deselectAll()">Deselect All</button>
+    <button id="checkbutton" onclick="check()" disabled>Submit</button>
+    {{if eq .Debug true}}
+    <button onclick="reset()">Reset</button>
+    {{end}}
+</div>
+
+<div id="debug">
+
+</div>
+<div id="gameover">
+</div>
+<script src="/static/game.js"></script>
+
+{{end}}

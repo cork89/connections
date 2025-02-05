@@ -1,0 +1,236 @@
+body {
+    font-family: 'nyt-franklin';
+}
+
+#cat {
+    margin-top: 4em;
+}
+
+.input-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    grid-column: 1;
+    grid-row: 3;
+    width: 100%;
+}
+
+.word-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+}
+
+.category-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+}
+
+.category {
+    background-color: #e2e8f0;
+    border: 1px solid #cbd5e0;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.category2 {
+    margin: 0px 5px 4px 0px;
+    padding: 3px 5px;
+    display: inline-block;
+}
+
+.word-remove {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#word-input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+}
+
+#word-input:focus {
+    outline: solid rgb(91, 172, 199);
+    border-radius: 3px;
+}
+
+#gameId-input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+}
+
+#gameId-input:focus {
+    outline: solid rgb(91, 172, 199);
+    border-radius: 3px;
+}
+
+.toolong:focus {
+    outline: solid rgb(231, 108, 108) !important;
+}
+
+
+#category-input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 5px;
+}
+
+#category-input:focus {
+    outline: solid rgb(91, 172, 199);
+    border-radius: 3px;
+}
+
+.colors {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 800px;
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.colors-item {
+    height: 250px;
+    padding: 1em;
+}
+
+.colors-title {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.colors-title img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+.title {
+    font-size: large;
+}
+
+.hotkey {
+    text-decoration: underline;
+}
+
+.color-selected {
+    height: 250px;
+    border: 3px solid #f01482;
+}
+
+.cat-word-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr auto;
+    grid-row-gap: 10px;
+    margin-top: 3em;
+    margin-left: 2em;
+    text-align: left;
+}
+
+@media (max-width: 700px) {
+    .cat-word-grid {
+        margin-top: 2em;
+        margin-left: 0em;
+    }
+
+    .colors-item {
+        /* height: 250px; */
+        height: auto;
+        padding: 1em;
+    }
+
+    .color-selected {
+        /* height: 250px; */
+        height: auto;
+        border: 3px solid #f01482;
+    }
+}    
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.inputs-grid {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    grid-template-rows: auto;
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    align-items: start;
+    width: 780px;
+    max-width: 90%;
+    margin: 10px auto;
+}
+
+.inputs-grid button {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    height: 100%;
+    background-color: white;
+    border-radius: 50px;
+    border-color: black;
+    border-style: solid;
+    padding: 1em 1.5em;
+    cursor: pointer;
+    font-family: 'nyt-franklin';
+    font-size: medium;
+}
+
+.inputs-grid button[disabled] {
+    border-color: #6d6d6d;
+    cursor: default;
+}
+
+.submit-warning {
+    border: 1px solid rgb(62, 62, 62);
+    display: flex;
+    padding: 4px 10px;
+    width: 800px;
+    max-width: 90%;
+    margin: 0 auto;
+    margin-bottom: 5px;
+}
+
+#warning-message {
+    margin-left: 1em;
+}
+
+.submit-warning-close {
+    margin-left: auto;
+    cursor: pointer;
+}

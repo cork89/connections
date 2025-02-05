@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="static/index.css">
+</head>
+
+<body>
+    hello world
+    <div class="board">
+        <div class="row">
+            <div id="word1" class="word">
+                <p>word1</p>
+            </div>
+            <div id="word2" class="word">
+                <p>word2</p>
+            </div>
+            <div id="word3" class="word">
+                <p>word3</p>
+            </div>
+            <div id="word4" class="word">
+                <p>word4</p>
+            </div>
+        </div>
+        <div class="row">
+            <div id="word5" class="word">
+                <p>word5</p>
+            </div>
+            <div id="word6" class="word">
+                <p>word6</p>
+            </div>
+            <div id="word7" class="word">
+                <p>word7</p>
+            </div>
+            <div id="word8" class="word">
+                <p>word8</p>
+            </div>
+        </div>
+        <div class="row">
+            <div id="word9" class="word">
+                <p>word9</p>
+            </div>
+            <div id="word10" class="word">
+                <p>word10</p>
+            </div>
+            <div id="word11" class="word">
+                <p>word11</p>
+            </div>
+            <div id="word12" class="word">
+                <p>word12</p>
+            </div>
+        </div>
+        <div class="row">
+            <div id="word13" class="word">
+                <p>word13</p>
+            </div>
+            <label></label>
+            <div id="word14" class="word">
+                <p>word14</p>
+            </div>
+            <div id="word15" class="word">
+                <p>word15</p>
+            </div>
+            <div id="word16" class="word">
+                <p>word16</p>
+            </div>
+        </div>
+    </div>
+    <div class="board">
+        <button onclick="shuffle()">Shuffle</button>
+        <button onclick="deselectAll()">Deselect All</button>
+        <button>Submit</button>
+    </div>
+    <script>
+        var currentlySelected = []
+        var currentOrder = ["word1", "word2", "word3", "word4", "word5", "word6", "word7", "word8", "word9", "word10", "word11", "word12", "word13", "word14", "word15", "word16"]
+
+        function shuffle() {
+            for (let i = currentOrder.length - 1; i >= 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentOrder[i], currentOrder[j]] = [currentOrder[j], currentOrder[i]];
+            }
+            console.log(currentOrder)
+            let board = document.getElementsByClassName("board")[0]
+            console.log(board)
+            let newHtml = ""
+            for (let i = 0; i < 4; i++) {
+                newHtml += '<div class="row">\n'
+                for (let j = 0; j < 4; j++) {
+                    let currentItem = currentOrder[i * 4 + j]
+                    let selected = currentlySelected.indexOf(currentItem) >= 0 ? "selected" : ""
+                    newHtml += `<div id="${currentItem}" class="word ${selected}"><p>${currentItem}</p></div>`
+                }
+                newHtml += '</div>\n'
+            }
+            board.innerHTML = newHtml
+            init()
+        }
+
+        function deselectAll() {
+            console.log(currentlySelected)
+            for (let i = 0; i < currentlySelected.length; i++) {
+                let el = document.getElementById(currentlySelected[i])
+                el.classList.remove("selected")
+            }
+            currentlySelected.splice(0, currentlySelected.length)
+
+            console.log(currentlySelected)
+
+        }
+
+        function attemptSelection(event) {
+            console.log(event)
+            let el;
+            if (event.target.nodeName == "P") {
+                el = event.target.parentElement
+            } else {
+                el = event.target
+            }
+            console.log(currentlySelected)
+            let selectedIdx = currentlySelected.indexOf(el.id)
+            if (selectedIdx >= 0) {
+                el.classList.remove("selected")
+                currentlySelected.splice(selectedIdx, 1)
+            } else if (currentlySelected.length < 4) {
+                el.classList.add("selected")
+                currentlySelected.push(el.id)
+            }
+        }
+
+        function init() {
+            const words = document.getElementsByClassName("word")
+
+            for (i = 0; i < words.length; i++) {
+                words[i].addEventListener("click", attemptSelection)
+            }
+        }
+        init()
+    </script>
+</body>
+
+</html>

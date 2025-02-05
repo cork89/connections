@@ -1,0 +1,149 @@
+{
+    "game_id": "abc123",
+    "words": [
+        {
+            "id": 1,
+            "word": "Apple",
+            "category": {
+                "category_id": 1,
+                "category_name": "fruit"
+            },
+            "solved": false
+        },
+        {
+            "id": 2,
+            "word": "Banana",
+            "category": {
+                "category_id": 1,
+                "category_name": "fruit"
+            },
+            "solved": false
+        },
+        {
+            "id": 3,
+            "word": "Cherry",
+            "category": {
+                "category_id": 1,
+                "category_name": "fruit"
+            },
+            "solved": false
+        },
+        {
+            "id": 4,
+            "word": "Strawberry",
+            "category": {
+                "category_id": 1,
+                "category_name": "fruit"
+            },
+            "solved": false
+        },
+        {
+            "id": 5,
+            "word": "Harry",
+            "category": {
+                "category_id": 2,
+                "category_name": "harry potter characters"
+            },
+            "solved": false
+        },
+        {
+            "id": 6,
+            "word": "Hermoine",
+            "category": {
+                "category_id": 2,
+                "category_name": "harry potter characters"
+            },
+            "solved": false
+        },
+        {
+            "id": 7,
+            "word": "Ron",
+            "category": {
+                "category_id": 2,
+                "category_name": "harry potter characters"
+            },
+            "solved": false
+        },
+        {
+            "id": 8,
+            "word": "Hagrid",
+            "category": {
+                "category_id": 2,
+                "category_name": "harry potter characters"
+            },
+            "solved": false
+        },
+        {
+            "id": 9,
+            "word": "Harvard",
+            "category": {
+                "category_id": 3,
+                "category_name": "Ivy League Schools"
+            },
+            "solved": false
+        },
+        {
+            "id": 10,
+            "word": "Yale",
+            "category": {
+                "category_id": 3,
+                "category_name": "Ivy League Schools"
+            },
+            "solved": false
+        },
+        {
+            "id": 11,
+            "word": "Princeton",
+            "category": {
+                "category_id": 3,
+                "category_name": "Ivy League Schools"
+            },
+            "solved": false
+        },
+        {
+            "id": 12,
+            "word": "Brown",
+            "category": {
+                "category_id": 3,
+                "category_name": "Ivy League Schools"
+            },
+            "solved": false
+        },
+        {
+            "id": 13,
+            "word": "Summer",
+            "category": {
+                "category_id": 4,
+                "category_name": "Seasons"
+            },
+            "solved": false
+        },
+        {
+            "id": 14,
+            "word": "Winter",
+            "category": {
+                "category_id": 4,
+                "category_name": "Seasons"    
+            },
+            "solved": false
+        },
+        {
+            "id": 15,
+            "word": "Fall",
+            "category": {
+                "category_id": 4,
+                "category_name": "Seasons"    
+            },
+            "solved": false
+        },
+        {
+            "id": 16,
+            "word": "Spring",
+            "category": {
+                "category_id": 4,
+                "category_name": "Seasons"    
+            },
+            "solved": false
+        }
+    ]
+}

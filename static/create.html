@@ -45,23 +45,25 @@
             </div>
         </div>
     </div>
-    <div style="margin: 5px auto;text-align: center;">To finalize a category/word press (,) or (enter/return) before saving.</div>
-    <div class="inputs-grid">
-        <div class="category-container">
-            <input type="text" id="category-input" placeholder="Enter category (enter/return to complete, 40 characters max)"
-                disabled>
+    <fieldset>
+        <legend>To finalize a category/word press (,) or (enter/return) before saving.</legend>
+        <div class="inputs-grid">
+            <div class="category-container">
+                <input type="text" id="category-input"
+                    placeholder="Enter category (40 characters max)" disabled>
+            </div>
+            <div class="word-container">
+                <input type="text" id="word-input"
+                    placeholder="Enter words (4 total, 20 characters each max)" disabled>
+            </div>
+            {{if eq .Debug true}}
+            <div class="input-container">
+                <input type="text" id="gameId-input" placeholder="game name">
+            </div>
+            {{end}}
+            <button onclick="saveCurrentCategories()" id="save-categories-button" disabled>Save</button>
         </div>
-        <div class="word-container">
-            <input type="text" id="word-input"
-                placeholder="Enter words (comma separated, 4 total, 20 characters each max)" disabled>
-        </div>
-        {{if eq .Debug true}}
-        <div class="input-container">
-            <input type="text" id="gameId-input" placeholder="game name">
-        </div>
-        {{end}}
-        <button onclick="saveCurrentCategories()" id="save-categories-button" disabled>Save</button>
-    </div>
+    </fieldset>
     <div class="submit-warning" style="visibility: hidden;">
         <img width="24px" height="24px" src="/static/info.svg">
         <span id="warning-message"></span>

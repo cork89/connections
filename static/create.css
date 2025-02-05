@@ -152,6 +152,18 @@ body {
     border: 3px solid #f01482;
 }
 
+fieldset {
+    width: 800px;
+    max-width: 100%;
+    margin: 0 auto;
+    border: 0.125rem solid rgb(236, 236, 236);
+    border-radius: .25rem;
+}
+
+legend {
+    margin-left:1rem;
+}
+
 .cat-word-grid {
     display: grid;
     grid-template-columns: 1fr 3fr;
@@ -183,7 +195,7 @@ body {
         height: auto;
         border: 3px solid #f01482;
     }
-}    
+}
 
 .uppercase {
     text-transform: uppercase;
@@ -196,9 +208,7 @@ body {
     grid-column-gap: 20px;
     grid-row-gap: 10px;
     align-items: start;
-    width: 780px;
-    max-width: 90%;
-    margin: 10px auto;
+    margin: 10px;
 }
 
 .inputs-grid button {

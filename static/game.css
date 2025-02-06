@@ -55,7 +55,7 @@
     text-align: center;
     cursor: pointer;
     font-weight: bold;
-    height: 5em;
+    height: 90px;
     display: flex;
     justify-content: center;
     align-content: center;
@@ -75,7 +75,11 @@
 @media (max-width: 565px) {
     .word {
         padding: 0.25em;
-        font-size: small;
+        font-size: medium;
+    }
+
+    .long {
+        font-size: x-small;
     }
 
     .header {

@@ -11,18 +11,17 @@
     </div>
     {{- end}}
     {{range $i, $a := .GameState.Words -}}
-    {{$LongWords := longWords .Word}}
-    {{$LongWordsLen := len $LongWords}}
+    {{$IsLongWord := longWords .Word}}
     {{if eq false .Solved -}}
     <div id="word{{.Id}}"
-        class="{{if eq true .Selected}}word selected{{else}}word{{end}}">
-        <span>{{range $i, $a := $LongWords -}}{{$a}}{{- end}}</span>
+        class="{{if eq true .Selected}}word selected{{else}}word{{end}}{{if eq $IsLongWord true }} long{{end}}">
+        <span>{{$a.Word}}</span>
     </div>
     {{- end}}
     {{- end}}
 </div>
-<div class="guesses"><span style="font-family:'nyt-franklin';">Mistakes Remaining:</span>{{range $idx := times .GameState.GuessesRemaining}}<span
-        class="guesses-bubble"></span>{{end}}</div>
+<div class="guesses"><span style="font-family:'nyt-franklin';">Mistakes Remaining:</span>{{range $idx := times
+    .GameState.GuessesRemaining}}<span class="guesses-bubble"></span>{{end}}</div>
 
 <div class="gamestatus">{{.Status}}</div>
 {{ if .GameOverData.IsGameOver}}

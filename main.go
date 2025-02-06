@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -47,32 +46,36 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func longWordHandler(word string) []string {
-	words := make([]string, 0)
+func longWordHandler(word string) bool {
+	// words := make([]string, 0)
 	startWords := strings.Split(word, " ")
 
+	longWord := false
+
 	for _, wd := range startWords {
-		if len(wd) < 14 {
-			words = append(words, wd)
+		if len(wd) < 9 {
+			// words = append(words, wd)
 		} else {
-			var partial string
-			for i, ch := range word {
-				partial = fmt.Sprintf("%s%c", partial, ch)
-				if i%7 == 0 && i > 0 {
-					if string(ch) != " " {
-						partial += "-"
-					}
-					words = append(words, partial)
-					partial = ""
-				}
-			}
-			if partial != "" {
-				words = append(words, partial)
-			}
-			lastWordIdx := len(words) - 1
-			words[lastWordIdx] = strings.Trim(words[lastWordIdx], "-")
+			longWord = true
+			// 	var partial string
+			// 	for i, ch := range word {
+			// 		partial = fmt.Sprintf("%s%c", partial, ch)
+			// 		if i%7 == 0 && i > 0 {
+			// 			if string(ch) != " " {
+			// 				partial += "-"
+			// 			}
+			// 			words = append(words, partial)
+			// 			partial = ""
+			// 		}
+			// 	}
+			// 	if partial != "" {
+			// 		words = append(words, partial)
+			// 	}
+			// 	lastWordIdx := len(words) - 1
+			// 	words[lastWordIdx] = strings.Trim(words[lastWordIdx], "-")
+			// }
+			// words = append(words, " ")
 		}
-		words = append(words, " ")
 	}
 	// var partial string
 	// for i, ch := range word {
@@ -90,7 +93,7 @@ func longWordHandler(word string) []string {
 	// }
 	// lastWordIdx := len(words) - 1
 	// words[lastWordIdx] = strings.Trim(words[lastWordIdx], "-")
-	return words
+	return longWord
 }
 
 func main() {

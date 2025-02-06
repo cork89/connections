@@ -158,6 +158,7 @@ fieldset {
     margin: 0 auto;
     border: 0.125rem solid rgb(236, 236, 236);
     border-radius: .25rem;
+    margin-top: 10px;
 }
 
 legend {

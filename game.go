@@ -170,7 +170,7 @@ type GameOverMessage string
 const (
 	Unresolved GameOverMessage = ""
 	Win        GameOverMessage = "Winner Winner Chicken Dinner!"
-	Lose       GameOverMessage = "Better Luck Next Time Kid."
+	Lose       GameOverMessage = "Better Luck Next Time, Kid."
 )
 
 type GameOverData struct {

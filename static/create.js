@@ -317,7 +317,7 @@ async function submitCategories() {
     try {
         let body = ctx.categories
         body.gameId = ctx.gameId ?? ""
-    
+
         const response = await fetch(url, {
             headers: {
                 "Accept": "application/json",
@@ -337,7 +337,7 @@ async function submitCategories() {
             msg.parentElement.style.visibility = "visible"
             submitButton.disabled = true
         } else if (json.gameId && json.gameId != "") {
-            // localStorage.removeItem("ctx")
+            localStorage.removeItem("ctx")
             storeGame(json.gameId, Date.now(), getCategoriesFromContext())
             window.location.href = `/game/${json.gameId}/`
             return

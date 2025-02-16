@@ -7,7 +7,7 @@
         <div class="colors-item yellow">
             <div class="colors-title">
                 <span class="title"><span class="hotkey">Y</span>ellow</span><img height="24px" width="24px"
-                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit yellow category">
+                    id="yellow-edit" src="/static/edit.svg" alt="edit yellow category">
             </div>
             <div class="cat-word-grid">
                 <span><b>Category:</b> </span><span id="category-yellow" class="uppercase">tbd</span>
@@ -17,7 +17,7 @@
         <div class="colors-item green">
             <div class="colors-title">
                 <span class="title"><span class="hotkey">G</span>reen</span><img height="24px" width="24px"
-                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit green category">
+                    id="green-edit" src="/static/edit.svg" alt="edit green category">
             </div>
             <div class="cat-word-grid">
                 <span><b>Category:</b></span><span id="category-green" class="uppercase">tbd</span>
@@ -27,7 +27,7 @@
         <div class="colors-item blue">
             <div class="colors-title">
                 <span class="title"><span class="hotkey">B</span>lue</span><img height="24px" width="24px"
-                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit blue category">
+                    id="blue-edit" src="/static/edit.svg" alt="edit blue category">
             </div>
             <div class="cat-word-grid">
                 <span><b>Category:</b> </span><span id="category-blue" class="uppercase">tbd</span>
@@ -37,7 +37,7 @@
         <div class="colors-item purple">
             <div class="colors-title">
                 <span class="title"><span class="hotkey">P</span>urple</span><img height="24px" width="24px"
-                    onclick="editCategories(this)" src="/static/edit.svg" alt="edit purple category">
+                    id="purple-edit" src="/static/edit.svg" alt="edit purple category">
             </div>
             <div class="cat-word-grid">
                 <span><b>Category:</b> </span><span id="category-purple" class="uppercase">tbd</span>
@@ -49,30 +49,28 @@
         <legend>To finalize a category/word press (,) or (enter/return) before saving.</legend>
         <div class="inputs-grid">
             <div class="category-container">
-                <input type="text" id="category-input"
-                    placeholder="Enter category (40 characters max)" disabled>
+                <input type="text" id="category-input" placeholder="Enter category (40 characters max)" disabled>
             </div>
             <div class="word-container">
-                <input type="text" id="word-input"
-                    placeholder="Enter words (4 total, 20 characters each max)" disabled>
+                <input type="text" id="word-input" placeholder="Enter words (4 total, 20 characters each max)" disabled>
             </div>
             {{if eq .Debug true}}
             <div class="input-container">
                 <input type="text" id="gameId-input" placeholder="game name">
             </div>
             {{end}}
-            <button onclick="saveCurrentCategories()" id="save-categories-button" disabled>Save</button>
+            <button id="save-categories-button" disabled>Save</button>
         </div>
     </fieldset>
     <div class="submit-warning" style="visibility: hidden;">
         <img width="24px" height="24px" src="/static/info.svg">
         <span id="warning-message"></span>
-        <span class="submit-warning-close" onclick="closeWarning(this)">x</span>
+        <span class="submit-warning-close" id="submit-warning-close">x</span>
     </div>
     <div class="buttons">
-        <button onclick="submitCategories()" id="submit" disabled>Submit</button>
+        <button id="submit" disabled>Submit</button>
     </div>
 
-    <script src="/static/create.js"></script>
+    <script src="/static/create.js" type="module">import { editCategories } from "/static/create.js"</script>
 </div>
 {{end}}

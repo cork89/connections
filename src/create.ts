@@ -126,10 +126,19 @@ function editCategories(el: HTMLImageElement) {
     const color = el?.parentElement?.parentElement
     if (color && color.classList[1] == ctx.state) {
         el.src = "/static/edit.svg"
-        editColor(color)
+        releaseColor(color)
     } else if (color && ctx.state == States.NONE) {
         el.src = "/static/x.svg"
         editColor(color)
+    } else {
+        const prevEl: HTMLElement | null = document.getElementById(`${ctx.state}-edit`)
+        const prevColor: HTMLElement | null | undefined = prevEl?.parentElement?.parentElement
+        if (prevEl && prevColor && color) {
+            (prevEl as HTMLImageElement).src = "/static/edit.svg"
+            el.src = "/static/x.svg"
+            releaseColor(prevColor)
+            editColor(color)
+        }
     }
 }
 
@@ -344,8 +353,7 @@ function displayCategoryAndWords() {
 
 /**
  * Update the context state from NONE to a specific color, give the color a border, and make the category/words inputs editable.
- * Updates the context state from a specific color to NONE, remove the colors border, and make the category/words inputs disabled.
- * @param {HTMLElement} color 
+ * @param {HTMLElement} color
  */
 function editColor(color: HTMLElement) {
     if (ctx.state === States.NONE) {
@@ -364,14 +372,20 @@ function editColor(color: HTMLElement) {
         } else {
             categoryInput.focus()
         }
-    } else {
-        ctx.state = States.NONE
-        color.classList.remove("color-selected")
-        categoryInput.disabled = true
-        wordsInput.disabled = true
-        saveCategoriesButton.disabled = true
-        removeCategoriesAndWords()
     }
+}
+
+/**
+ * Updates the context state from a specific color to NONE, remove the colors border, and make the category/words inputs disabled.
+ * @param {HTMLElement} color 
+ */
+function releaseColor(color: HTMLElement) {
+    ctx.state = States.NONE
+    color.classList.remove("color-selected")
+    categoryInput.disabled = true
+    wordsInput.disabled = true
+    saveCategoriesButton.disabled = true
+    removeCategoriesAndWords()
 }
 
 /**
@@ -452,7 +466,7 @@ function saveCurrentCategories() {
         if (currentDiv) {
             const currentImg: HTMLImageElement = currentDiv.querySelector("img") as HTMLImageElement
             currentImg.src = "/static/edit.svg"
-            editColor(currentDiv)
+            releaseColor(currentDiv)
         }
 
         // Save ctx

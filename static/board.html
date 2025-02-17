@@ -1,7 +1,7 @@
 {{define "head"}}{{end}}
 {{define "board"}}
-<div id="oneaway">
-    <p class='{{if eq "three" .Result}}oneaway{{else}}oneaway hidden{{end}}'>One Away!</p>
+<div id="oa">
+    <span class='{{if eq "three" .Result}}oneaway{{else}}oneaway hidden{{end}}'>One Away!</span>
 </div>
 <div id="connections" class="board0">
     {{range $i, $a := .GameState.Answers -}}
@@ -28,7 +28,7 @@
 <div id="gameOverModal" class="modal">
     <div class="modal-content">
         <span class="close" id="close-modal">&times;</span>
-        <p id="gameOverMessage">{{.GameOverData.Message}}</p>
+        <span id="goMsg">{{.GameOverData.Message}}</span>
         {{.GameOverData.Guy}}
     </div>
 </div>

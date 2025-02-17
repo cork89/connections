@@ -26,6 +26,13 @@ type GameInfo struct {
 	Words  []Word `json:"words"`
 }
 
+const (
+	YellowId int = 1
+	GreenId  int = 2
+	BlueId   int = 3
+	PurpleId int = 4
+)
+
 func initDataaccess() error {
 	ctx := context.Background()
 	dbFile := "file:connections.db"
@@ -88,7 +95,49 @@ func getRandomGame() (string, error) {
 	return game.GameID, nil
 }
 
-func createGame(gameId string, words []Word) (string, error) {
+func getGamesByUser(session string) (MyGamesData, error) {
+	ctx := context.Background()
+	games, err := queries.GetGamesByUser(ctx, session)
+
+	var myGamesData MyGamesData
+
+	if err != nil {
+		return myGamesData, err
+	}
+
+	myGamesData = make([]MyGameData, 0, len(games))
+
+	for _, v := range games {
+		var gameInfo GameInfo
+
+		err = json.Unmarshal([]byte(v.GameInfo), &gameInfo)
+
+		if err != nil {
+			return myGamesData, err
+		}
+
+		var categories Categories
+
+		for _, word := range gameInfo.Words {
+			if word.Category.CategoryId == YellowId {
+				categories.Yellow = word.Category.CategoryName
+			} else if word.Category.CategoryId == GreenId {
+				categories.Green = word.Category.CategoryName
+			} else if word.Category.CategoryId == BlueId {
+				categories.Blue = word.Category.CategoryName
+			} else if word.Category.CategoryId == PurpleId {
+				categories.Purple = word.Category.CategoryName
+			}
+		}
+
+		var myGame = MyGameData{Categories: categories, CreatedDtTm: v.CreatedDtTm, GameId: v.GameID}
+		myGamesData = append(myGamesData, myGame)
+	}
+
+	return myGamesData, nil
+}
+
+func createGame(gameId string, words []Word, session string) (string, error) {
 	ctx := context.Background()
 
 	gameExists, err := queries.GameExists(ctx, gameId)
@@ -117,7 +166,7 @@ func createGame(gameId string, words []Word) (string, error) {
 		return "", err
 	}
 
-	_, err = queries.CreateGame(ctx, dataaccess.CreateGameParams{GameID: gameId, GameInfo: string(bytes), CreatedDtTm: time.Now().Format(time.RFC3339)})
+	_, err = queries.CreateGame(ctx, dataaccess.CreateGameParams{GameID: gameId, GameInfo: string(bytes), CreatedDtTm: time.Now().Format(time.RFC3339), CreatedUserID: session})
 
 	if err != nil {
 		log.Println("failed to create game, err: ", err)

@@ -8,8 +8,8 @@ import (
 
 func main() {
 	result := api.Build(api.BuildOptions{
-		EntryPoints:       []string{"common.ts", "create.ts", "game.ts"},
-		Outdir:            "../static/",
+		EntryPoints:       []string{"./src/common.ts", "./src/create.ts", "./src/game.ts", "./src/mygames.ts"},
+		Outdir:            "./static/",
 		Bundle:            false,
 		Write:             true,
 		LogLevel:          api.LogLevelInfo,

@@ -212,7 +212,9 @@ func createPostHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		words := verifyResponse.convertToWords()
 
-		gameId, err := createGame(verifyResponse.GameId, words)
+		session := r.Context().Value(SessionCtx).(string)
+
+		gameId, err := createGame(verifyResponse.GameId, words, session)
 
 		if err != nil {
 			log.Println("failed to create game, err: ", err)

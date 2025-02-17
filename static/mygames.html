@@ -1,0 +1,34 @@
+{{define "head"}}
+<link rel="stylesheet" href="/static/mygames.css">
+{{end}}
+
+{{define "game"}}
+<div class="mygames">
+    <div class="copynotif">
+    </div>
+    <table>
+        <thead>
+            <th>Categories</th>
+            <th>Created</th>
+            <th>Link</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {{range $i, $a := .}}
+            <tr>
+                <td style="display:flex; flex-direction: column;">
+                    <span>🟡{{.Categories.Yellow}}</span>
+                    <span>🟢{{.Categories.Green}}</span>
+                    <span>🔵{{.Categories.Blue}}</span>
+                    <span>🟣{{.Categories.Purple}}</span>
+                </td>
+                <td>{{.CreatedDtTm}}</td>
+                <td><a href="/game/{{.GameId}}/">{{.ShortLink}}</a></td>
+                <td><img height="24px" width="24px" src="/static/copy.svg"></td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+<script src="/static/mygames.js" type="module"></script>
+{{end}}

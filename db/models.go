@@ -5,10 +5,11 @@
 package db
 
 type Game struct {
-	ID          int64
-	GameID      string
-	GameInfo    string
-	CreatedDtTm string
+	ID            int64
+	GameID        string
+	GameInfo      string
+	CreatedDtTm   string
+	CreatedUserID string
 }
 
 type Gamestate struct {

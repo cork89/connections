@@ -116,7 +116,6 @@ blueEdit.addEventListener("click", (el) => editCategories(el.target as HTMLImage
 const purpleEdit = document.getElementById("purple-edit") ?? (() => { throw new Error("purpleEdit cannot be null") })()
 purpleEdit.addEventListener("click", (el) => editCategories(el.target as HTMLImageElement))
 
-
 /**
  * When the edit svg is clicked, call editColor for the parents color.
  * Change the edit icon to an x if not selected, or back to edit icon if already selected.
@@ -141,7 +140,6 @@ function editCategories(el: HTMLImageElement) {
         }
     }
 }
-
 
 var categoryInput: HTMLInputElement
 var wordsInput: HTMLInputElement
@@ -315,6 +313,22 @@ function setupCreate() {
     }, true)
 
     checkSubmitStatus()
+
+    // Try making category/words clickable to enter edit mode
+    for (const key in ctx["categories"]) {
+        const categoryStuff: HTMLElement | null = document.getElementById(`category-${key}`)
+        const wordStuff: HTMLElement | null = document.getElementById(`words-${key}`)
+        const grandparent = categoryStuff?.parentElement?.parentElement
+        const imgel = grandparent?.querySelector("img")
+
+        if (categoryStuff && grandparent && imgel) {
+            categoryStuff.addEventListener("click", () => editCategories(imgel))
+        }
+
+        if (wordStuff && grandparent && imgel) {
+            wordStuff.addEventListener("click", () => editCategories(imgel))
+        }
+    }
 }
 
 setupCreate()

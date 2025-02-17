@@ -108,7 +108,7 @@ func CacheControl(next http.Handler) http.Handler {
 	})
 }
 
-var noCompressionFiles = []string{"webp", "jpeg", "woff2", "mpeg", "mp4", "webm"}
+var noCompressionFiles = []string{"webp", "jpeg", "woff2", "mpeg", "mp4", "webm", "common.js", "mygames.js"}
 
 func StaticCompression(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

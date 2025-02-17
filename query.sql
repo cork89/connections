@@ -8,13 +8,19 @@ WHERE game_id=? LIMIT 1;
 
 -- name: GetRandomGame :one
 SELECT * FROM games
-ORDER BY RANDOM() LIMIT 1; 
+ORDER BY RANDOM() LIMIT 1;
+
+-- name: GetGamesByUser :many
+SELECT * FROM games
+where created_user_id=?
+ORDER BY created_dt_tm DESC
+LIMIT 50;
 
 -- name: CreateGame :one
 INSERT INTO games (
-  game_id, game_info, created_dt_tm
+  game_id, game_info, created_dt_tm, created_user_id
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, ?
 )
 RETURNING *;
 

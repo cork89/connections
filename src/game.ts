@@ -25,7 +25,7 @@ const shuffleButton: HTMLButtonElement = document.getElementById("shuffleButton"
 const deselectButton: HTMLButtonElement = document.getElementById("deselectButton") as HTMLButtonElement ?? (() => { throw new Error("deselectButton cannot be null") })()
 const checkButton: HTMLButtonElement = document.getElementById("checkButton") as HTMLButtonElement ?? (() => { throw new Error("checkButton cannot be null") })()
 const resetButton: HTMLButtonElement | null = document.getElementById("resetButton") as HTMLButtonElement | null
-const oneaway: HTMLElement = document.getElementById("oneaway") ?? (() => { throw new Error("oneaway cannot be null") })()
+// const oneaway: HTMLElement = document.getElementById("oa") ?? (() => { throw new Error("oneaway cannot be null") })()
 const closeModalButton: HTMLElement | null = document.getElementById("close-modal")
 const closeModalWindow: HTMLElement | null = document.getElementById("gameOverModal")
 
@@ -134,10 +134,10 @@ async function check() {
             modal.addEventListener("click", (event) => closeModalEmptySpace(event as PointerEvent));
         }
 
-        const oneaway_p = oneaway.children[0]
-        if (!oneaway_p.classList.contains("hidden")) {
+        const oneaway_span = document.getElementById("oa")?.children[0]
+        if (oneaway_span && !oneaway_span.classList.contains("hidden")) {
             setTimeout(() => {
-                oneaway_p.classList.add("hidden")
+                oneaway_span.classList.add("hidden")
             }, 3000)
         }
 

@@ -11,27 +11,34 @@ import (
 
 const createGame = `-- name: CreateGame :one
 INSERT INTO games (
-  game_id, game_info, created_dt_tm
+  game_id, game_info, created_dt_tm, created_user_id
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, ?
 )
-RETURNING id, game_id, game_info, created_dt_tm
+RETURNING id, game_id, game_info, created_dt_tm, created_user_id
 `
 
 type CreateGameParams struct {
-	GameID      string
-	GameInfo    string
-	CreatedDtTm string
+	GameID        string
+	GameInfo      string
+	CreatedDtTm   string
+	CreatedUserID string
 }
 
 func (q *Queries) CreateGame(ctx context.Context, arg CreateGameParams) (Game, error) {
-	row := q.db.QueryRowContext(ctx, createGame, arg.GameID, arg.GameInfo, arg.CreatedDtTm)
+	row := q.db.QueryRowContext(ctx, createGame,
+		arg.GameID,
+		arg.GameInfo,
+		arg.CreatedDtTm,
+		arg.CreatedUserID,
+	)
 	var i Game
 	err := row.Scan(
 		&i.ID,
 		&i.GameID,
 		&i.GameInfo,
 		&i.CreatedDtTm,
+		&i.CreatedUserID,
 	)
 	return i, err
 }
@@ -108,7 +115,7 @@ func (q *Queries) GameExists(ctx context.Context, gameID string) (int64, error) 
 }
 
 const getGame = `-- name: GetGame :one
-SELECT id, game_id, game_info, created_dt_tm FROM games
+SELECT id, game_id, game_info, created_dt_tm, created_user_id FROM games
 WHERE game_id=? LIMIT 1
 `
 
@@ -120,8 +127,45 @@ func (q *Queries) GetGame(ctx context.Context, gameID string) (Game, error) {
 		&i.GameID,
 		&i.GameInfo,
 		&i.CreatedDtTm,
+		&i.CreatedUserID,
 	)
 	return i, err
+}
+
+const getGamesByUser = `-- name: GetGamesByUser :many
+SELECT id, game_id, game_info, created_dt_tm, created_user_id FROM games
+where created_user_id=?
+ORDER BY created_dt_tm DESC
+LIMIT 50
+`
+
+func (q *Queries) GetGamesByUser(ctx context.Context, createdUserID string) ([]Game, error) {
+	rows, err := q.db.QueryContext(ctx, getGamesByUser, createdUserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Game
+	for rows.Next() {
+		var i Game
+		if err := rows.Scan(
+			&i.ID,
+			&i.GameID,
+			&i.GameInfo,
+			&i.CreatedDtTm,
+			&i.CreatedUserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getGamestate = `-- name: GetGamestate :one
@@ -148,7 +192,7 @@ func (q *Queries) GetGamestate(ctx context.Context, arg GetGamestateParams) (Gam
 }
 
 const getRandomGame = `-- name: GetRandomGame :one
-SELECT id, game_id, game_info, created_dt_tm FROM games
+SELECT id, game_id, game_info, created_dt_tm, created_user_id FROM games
 ORDER BY RANDOM() LIMIT 1
 `
 
@@ -160,6 +204,7 @@ func (q *Queries) GetRandomGame(ctx context.Context) (Game, error) {
 		&i.GameID,
 		&i.GameInfo,
 		&i.CreatedDtTm,
+		&i.CreatedUserID,
 	)
 	return i, err
 }
@@ -168,7 +213,7 @@ const updateGame = `-- name: UpdateGame :one
 UPDATE games
 SET game_info = ?
 WHERE game_id = ?
-RETURNING id, game_id, game_info, created_dt_tm
+RETURNING id, game_id, game_info, created_dt_tm, created_user_id
 `
 
 type UpdateGameParams struct {
@@ -184,6 +229,7 @@ func (q *Queries) UpdateGame(ctx context.Context, arg UpdateGameParams) (Game, e
 		&i.GameID,
 		&i.GameInfo,
 		&i.CreatedDtTm,
+		&i.CreatedUserID,
 	)
 	return i, err
 }

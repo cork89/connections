@@ -143,6 +143,7 @@ func main() {
 	tmpl["game"] = template.Must(funcTemp.ParseFiles("static/board.html", "static/game.html", "static/base.html"))
 	tmpl["board"] = template.Must(funcTemp.ParseFiles("static/board.html"))
 	tmpl["create"] = template.Must(template.ParseFiles("static/create.html", "static/base.html"))
+	tmpl["mygames"] = template.Must(template.ParseFiles("static/mygames.html", "static/base.html"))
 	tmpl["headsup"] = template.Must(template.ParseFiles("static/headsup.html", "static/base.html"))
 	tmpl["404"] = template.Must(template.ParseFiles("static/404.html", "static/base.html"))
 
@@ -153,6 +154,8 @@ func main() {
 	router.HandleFunc("GET /create/", createHandler)
 	router.HandleFunc("POST /create/", createPostHandler)
 	router.HandleFunc("POST /create/verify/", verifyHandler)
+
+	router.HandleFunc("GET /mygames/", mygamesHandler)
 
 	router.HandleFunc("POST /game/{gameId}/check/", checkHandler)
 	router.HandleFunc("POST /game/{gameId}/shuffle/", shuffleHandler)

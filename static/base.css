@@ -16,20 +16,27 @@
     box-sizing: border-box;
 }
 
+:root {
+    --purple-color: #ba81c6;
+    --blue-color: #b2c4f0;
+    --green-color: #a1c45b;
+    --yellow-color: #f8df6d;
+}
+
 .purple {
-    background-color: #ba81c6;
+    background-color: var(--purple-color);
 }
 
 .blue {
-    background-color: #b2c4f0;
+    background-color: var(--blue-color);
 }
 
 .green {
-    background-color: #a1c45b;
+    background-color: var(--green-color);
 }
 
 .yellow {
-    background-color: #f8df6d;
+    background-color: var(--yellow-color);
 }
 
 .buttons {

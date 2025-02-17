@@ -1,0 +1,72 @@
+.mygames {
+    display: flex;
+    justify-content: center;
+    margin: 5em 0;
+    font-family: nyt-franklin;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140 140 140);
+    font-family: nyt-franklin;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+caption {
+    caption-side: bottom;
+    padding: 10px;
+    font-weight: bold;
+}
+
+th:nth-child(1) {
+    background-color: var(--yellow-color);
+}
+
+th:nth-child(2) {
+    background-color: var(--green-color);
+}
+
+th:nth-child(3) {
+    background-color: var(--blue-color);
+}
+
+th:nth-child(4) {
+    background-color: var(--purple-color);
+}
+
+th,
+td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
+}
+
+td:last-of-type {
+    text-align: center;
+}
+
+tbody>tr:nth-of-type(even) {
+    background-color: rgb(237 238 242);
+}
+
+tfoot th {
+    text-align: right;
+}
+
+tfoot td {
+    font-weight: bold;
+}
+
+img {
+    cursor: pointer;
+}
+
+.copynotif {
+    visibility: hidden;
+    border: 1px black solid;
+    border-radius: 12px;
+    padding: 5px;
+    position: absolute;
+    top: 70px;
+    background: aliceblue;
+}

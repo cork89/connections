@@ -92,7 +92,7 @@
     color: white;
 }
 
-#oneaway {
+#oa {
     display: flex;
     justify-content: center;
     margin: 10px auto;
@@ -137,11 +137,13 @@
     max-width: 90%;
 }
 
-.modal-content p {
+.modal-content #goMsg {
     font-family: 'nyt-franklin';
     font-size: x-large;
     text-align: center;
     margin-top: 2em;
+    display: flex;
+    justify-content: center;
 }
 
 .close {

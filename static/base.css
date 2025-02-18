@@ -62,3 +62,57 @@
     cursor: default;
     color: #6d6d6d;
 }
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    padding: 0 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-size: x-large;
+}
+
+header a {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+header a:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#game {
+    flex: 1;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+footer span {
+    color: #5e5e5e;
+    margin: 0 auto;
+    font-size: small;
+    max-width: 90%;
+}
+
+footer a {
+    position: absolute;
+    right: 10px;
+}

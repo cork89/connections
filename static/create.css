@@ -71,6 +71,7 @@ body {
     outline: none;
     flex-grow: 1;
     padding: 5px;
+    background-color: var(--color-create-input);
 }
 
 #word-input:focus {
@@ -100,6 +101,7 @@ body {
     outline: none;
     flex-grow: 1;
     padding: 5px;
+    background-color: var(--color-create-input);
 }
 
 #category-input:focus {
@@ -117,6 +119,7 @@ body {
     max-width: 90%;
     margin: 0 auto;
     text-align: center;
+    color: black;
 }
 
 .colors-item {
@@ -162,7 +165,7 @@ fieldset {
 }
 
 legend {
-    margin-left:1rem;
+    margin-left: 1rem;
 }
 
 .cat-word-grid {
@@ -210,25 +213,28 @@ legend {
     grid-row-gap: 10px;
     align-items: start;
     margin: 10px;
+    color: black;
 }
 
 .inputs-grid button {
     grid-column: 2;
     grid-row: 1 / span 2;
     height: 100%;
-    background-color: white;
+    background-color: var(--color-background);
     border-radius: 50px;
-    border-color: black;
+    border-color: var(--color-primary);
     border-style: solid;
     padding: 1em 1.5em;
     cursor: pointer;
     font-family: 'nyt-franklin';
     font-size: medium;
+    color: var(--color-primary)
 }
 
 .inputs-grid button[disabled] {
     border-color: #6d6d6d;
     cursor: default;
+    color: #6d6d6d;
 }
 
 .submit-warning {

@@ -13,6 +13,10 @@ table {
     letter-spacing: 1px;
 }
 
+th {
+    color: black;
+}
+
 caption {
     caption-side: bottom;
     padding: 10px;
@@ -46,7 +50,7 @@ td:last-of-type {
 }
 
 tbody>tr:nth-of-type(even) {
-    background-color: rgb(237 238 242);
+    background-color: var(--color-mygames);
 }
 
 tfoot th {
@@ -61,12 +65,22 @@ img {
     cursor: pointer;
 }
 
+@media (prefers-color-scheme: dark) {
+    img {
+        filter: invert(.7)
+    }
+
+    a:visited {
+        color: var(--color-footer)
+    }
+}
+
 .copynotif {
     visibility: hidden;
-    border: 1px black solid;
+    border: 1px var(--color-primary) solid;
     border-radius: 12px;
     padding: 5px;
     position: absolute;
     top: 70px;
-    background: aliceblue;
+    background: var(--color-background);
 }

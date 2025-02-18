@@ -13,6 +13,8 @@
     max-width: 90%;
     font-size: large;
     text-transform: uppercase;
+    color: black;
+    user-select: none
 }
 
 .header {
@@ -129,7 +131,7 @@
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: var(--color-background);
     margin: 15% auto;
     padding: 0 20px;
     border: 1px solid #888;

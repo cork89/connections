@@ -21,6 +21,31 @@
     --blue-color: #b2c4f0;
     --green-color: #a1c45b;
     --yellow-color: #f8df6d;
+    --color-primary: #000;
+    --color-background: #fff;
+    --color-header: #fff;
+    --color-footer: #5e5e5e;
+    --color-mygames: rgb(237 238 242);
+    --color-create-input: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-primary: #efefef;
+        --color-background: #262626;
+        --color-header: var(--blue-color);
+        --color-footer: #c4c2c2;
+        --color-mygames: rgb(49, 49, 49);
+        --color-create-input: #bdbdbd;
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-primary);
 }
 
 .purple {
@@ -46,15 +71,15 @@
 
 .buttons button {
     margin: 0 5px;
-    background-color: white;
+    background-color: var(--color-background);
     border-radius: 50px;
-    border-color: black;
+    border-color: var(--color-primary);
     border-style: solid;
     padding: 1em 1.5em;
     cursor: pointer;
     font-family: 'nyt-franklin';
     font-size: medium;
-    color: black;
+    color: var(--color-primary);
 }
 
 .buttons button[disabled] {
@@ -69,7 +94,7 @@ header {
     align-items: center;
     height: 40px;
     padding: 0 40px;
-    background-color: #fff;
+    background-color: var(--color-header);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
@@ -89,12 +114,6 @@ header a:visited {
     cursor: pointer;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
 #game {
     flex: 1;
 }
@@ -106,7 +125,7 @@ footer {
 }
 
 footer span {
-    color: #5e5e5e;
+    color: var(--color-footer);
     margin: 0 auto;
     font-size: small;
     max-width: 90%;
@@ -115,4 +134,10 @@ footer span {
 footer a {
     position: absolute;
     right: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    footer img {
+        filter: invert(1);
+    }
 }

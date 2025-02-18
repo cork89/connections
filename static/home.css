@@ -12,7 +12,7 @@ p {
     /* border-left: 1px solid rgb(160, 160, 160);
     border-right: 1px solid rgb(160, 160, 160);
     height: 100vh; */
-    background-color: white;
+    /* background-color: white; */
     margin: 0 auto;
 }
 
@@ -39,7 +39,7 @@ p {
 
 .homehero img {
     width: 600px;
-    max-width: 90%
+    max-width: 90%;
 }
 
 .buttons {

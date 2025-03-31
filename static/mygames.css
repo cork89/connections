@@ -2,25 +2,30 @@
     display: flex;
     justify-content: center;
     margin: 5em 0;
-    font-family: nyt-franklin;
+    font-family: "nyt-franklin", sans-serif;
 }
 
 table {
     border-collapse: collapse;
-    border: 2px solid rgb(140 140 140);
-    font-family: nyt-franklin;
+    font-family: "nyt-franklin", sans-serif;
     font-size: 0.8rem;
     letter-spacing: 1px;
-}
-
-th {
-    color: black;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 caption {
     caption-side: bottom;
     padding: 10px;
     font-weight: bold;
+    margin-top: 8px;
+}
+
+th {
+    color: black;
+    padding: 12px 10px;
+    font-weight: 600;
 }
 
 th:nth-child(1) {
@@ -41,8 +46,8 @@ th:nth-child(4) {
 
 th,
 td {
-    border: 1px solid rgb(160 160 160);
     padding: 8px 10px;
+    transition: background-color 0.2s ease;
 }
 
 td:last-of-type {
@@ -51,6 +56,10 @@ td:last-of-type {
 
 tbody>tr:nth-of-type(even) {
     background-color: var(--color-mygames);
+}
+
+tbody>tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 tfoot th {
@@ -63,24 +72,35 @@ tfoot td {
 
 img {
     cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-    img {
-        filter: invert(.7)
-    }
-
-    a:visited {
-        color: var(--color-footer)
-    }
+img:hover {
+    transform: scale(1.05);
 }
 
 .copynotif {
     visibility: hidden;
-    border: 1px var(--color-primary) solid;
+    border: 1px solid var(--color-primary);
     border-radius: 12px;
-    padding: 5px;
+    padding: 8px 12px;
     position: absolute;
     top: 70px;
     background: var(--color-background);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: visibility 0.3s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    img {
+        filter: invert(0.7);
+    }
+
+    a:visited {
+        color: var(--color-footer);
+    }
+
+    tbody>tr:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
 }

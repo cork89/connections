@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/a-h/templ"
 )
 
 //go:embed utils/badwords.json
@@ -170,6 +172,9 @@ func main() {
 		http.ServeFile(w, r, "static/robots.txt")
 	})
 
+	component := hello("world")
+
+	router.Handle("GET /test/", templ.Handler(component))
 	router.HandleFunc("GET /", homeHandler)
 
 	stack := CreateStack(

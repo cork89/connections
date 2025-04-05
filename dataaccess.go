@@ -9,6 +9,7 @@ import (
 	"time"
 
 	dataaccess "com.github.cork89/connections/db"
+	"com.github.cork89/connections/models"
 	uuid "github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -22,8 +23,8 @@ var abc123 string
 var queries *dataaccess.Queries
 
 type GameInfo struct {
-	GameId string `json:"game_id"`
-	Words  []Word `json:"words"`
+	GameId string        `json:"game_id"`
+	Words  []models.Word `json:"words"`
 }
 
 const (
@@ -64,9 +65,9 @@ func initDataaccess() error {
 	return nil
 }
 
-func getGame(gameId string) ([]Word, int64, error) {
+func getGame(gameId string) ([]models.Word, int64, error) {
 	ctx := context.Background()
-	words := make([]Word, 0)
+	words := make([]models.Word, 0)
 	game, err := queries.GetGame(ctx, gameId)
 
 	if err != nil {
@@ -95,17 +96,17 @@ func getRandomGame() (string, error) {
 	return game.GameID, nil
 }
 
-func getGamesByUser(session string) (MyGamesData, error) {
+func getGamesByUser(session string) (models.MyGamesData, error) {
 	ctx := context.Background()
 	games, err := queries.GetGamesByUser(ctx, session)
 
-	var myGamesData MyGamesData
+	var myGamesData models.MyGamesData
 
 	if err != nil {
 		return myGamesData, err
 	}
 
-	myGamesData = make([]MyGameData, 0, len(games))
+	myGamesData = make([]models.MyGameData, 0, len(games))
 
 	for _, v := range games {
 		var gameInfo GameInfo
@@ -116,7 +117,7 @@ func getGamesByUser(session string) (MyGamesData, error) {
 			return myGamesData, err
 		}
 
-		var categories Categories
+		var categories models.Categories
 
 		for _, word := range gameInfo.Words {
 			if word.Category.CategoryId == YellowId {
@@ -130,14 +131,14 @@ func getGamesByUser(session string) (MyGamesData, error) {
 			}
 		}
 
-		var myGame = MyGameData{Categories: categories, CreatedDtTm: v.CreatedDtTm, GameId: v.GameID}
+		var myGame = models.MyGameData{Categories: categories, CreatedDtTm: v.CreatedDtTm, GameId: v.GameID}
 		myGamesData = append(myGamesData, myGame)
 	}
 
 	return myGamesData, nil
 }
 
-func createGame(gameId string, words []Word, session string) (string, error) {
+func createGame(gameId string, words []models.Word, session string) (string, error) {
 	ctx := context.Background()
 
 	gameExists, err := queries.GameExists(ctx, gameId)
@@ -175,7 +176,7 @@ func createGame(gameId string, words []Word, session string) (string, error) {
 	return gameId, nil
 }
 
-func initGamestate(gamestate GameState, session string, gameId int64) error {
+func initGamestate(gamestate models.GameState, session string, gameId int64) error {
 	ctx := context.Background()
 
 	err := queries.DeleteGamestate(ctx, dataaccess.DeleteGamestateParams{GameID: gameId, UserID: session})
@@ -196,7 +197,7 @@ func initGamestate(gamestate GameState, session string, gameId int64) error {
 	return err
 }
 
-func updateGamestate(gamestate GameState, session string, gameId int64) error {
+func updateGamestate(gamestate models.GameState, session string, gameId int64) error {
 	ctx := context.Background()
 
 	gamestatebytes, err := json.Marshal(gamestate)
@@ -210,11 +211,11 @@ func updateGamestate(gamestate GameState, session string, gameId int64) error {
 	return err
 }
 
-func getGamestate(session string, gameId int64) (GameState, error) {
+func getGamestate(session string, gameId int64) (models.GameState, error) {
 	ctx := context.Background()
 
 	gamestate, err := queries.GetGamestate(ctx, dataaccess.GetGamestateParams{UserID: session, GameID: gameId})
-	var state GameState
+	var state models.GameState
 
 	if err != nil {
 		log.Println("failed to retrieve gamestate, err: ", err)

@@ -1,54 +1,57 @@
-body {
-    font-family: 'nyt-franklin';
+/* Base styles */
+:root {
+    --border-radius-sm: 3px;
+    --border-radius-md: 5px;
+    --border-color: #ccc;
+    --accent-color: rgb(91, 172, 199);
+    --error-color: rgb(231, 108, 108);
+    --highlight-color: #f01482;
+    --primary-text: black;
 }
 
+body {
+    font-family: "nyt-franklin";
+}
+
+/* Layout */
 #cat {
     margin-top: 4em;
 }
 
-.input-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 5px;
-    text-transform: uppercase;
-    grid-column: 1;
-    grid-row: 3;
-    width: 100%;
-}
-
-.word-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 5px;
-    text-transform: uppercase;
-    grid-column: 1;
-    grid-row: 2;
-    width: 100%;
-}
-
+/* Container styles */
+.input-container,
+.word-container,
 .category-container {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     padding: 5px;
-    border-radius: 5px;
+    border-radius: var(--border-radius-md);
     text-transform: uppercase;
-    grid-column: 1;
-    grid-row: 1;
     width: 100%;
 }
 
+.input-container {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.word-container {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.category-container {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+/* Category styles */
 .category {
     background-color: #e2e8f0;
     border: 1px solid #cbd5e0;
-    border-radius: 3px;
+    border-radius: var(--border-radius-sm);
     padding: 5px 10px;
     margin: 5px;
     display: inline-flex;
@@ -56,7 +59,7 @@ body {
 }
 
 .category2 {
-    margin: 0px 5px 4px 0px;
+    margin: 0 5px 4px 0;
     padding: 3px 5px;
     display: inline-block;
 }
@@ -66,36 +69,9 @@ body {
     cursor: pointer;
 }
 
-#word-input {
-    border: none;
-    outline: none;
-    flex-grow: 1;
-    padding: 5px;
-    background-color: var(--color-create-input);
-}
-
-#word-input:focus {
-    outline: solid rgb(91, 172, 199);
-    border-radius: 3px;
-}
-
-#gameId-input {
-    border: none;
-    outline: none;
-    flex-grow: 1;
-    padding: 5px;
-}
-
-#gameId-input:focus {
-    outline: solid rgb(91, 172, 199);
-    border-radius: 3px;
-}
-
-.toolong:focus {
-    outline: solid rgb(231, 108, 108) !important;
-}
-
-
+/* Input styles */
+#word-input,
+#gameId-input,
 #category-input {
     border: none;
     outline: none;
@@ -104,22 +80,28 @@ body {
     background-color: var(--color-create-input);
 }
 
+#word-input:focus,
+#gameId-input:focus,
 #category-input:focus {
-    outline: solid rgb(91, 172, 199);
-    border-radius: 3px;
+    outline: solid var(--accent-color);
+    border-radius: var(--border-radius-sm);
 }
 
+.toolong:focus {
+    outline: solid var(--error-color) !important;
+}
+
+/* Colors grid */
 .colors {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+    gap: 0;
     width: 800px;
     max-width: 90%;
     margin: 0 auto;
     text-align: center;
-    color: black;
+    color: var(--primary-text);
 }
 
 .colors-item {
@@ -142,93 +124,57 @@ body {
     cursor: pointer;
 }
 
-.title {
-    font-size: large;
-}
-
-.hotkey {
-    text-decoration: underline;
-}
-
 .color-selected {
     height: 250px;
-    border: 3px solid #f01482;
+    border: 3px solid var(--highlight-color);
 }
 
+/* Form elements */
 fieldset {
     width: 800px;
     max-width: 100%;
-    margin: 0 auto;
+    margin: 10px auto 0;
     border: 0.125rem solid rgb(236, 236, 236);
-    border-radius: .25rem;
-    margin-top: 10px;
+    border-radius: 0.25rem;
 }
 
 legend {
     margin-left: 1rem;
 }
 
+/* Grid layouts */
 .cat-word-grid {
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr auto;
-    grid-row-gap: 10px;
-    margin-top: 3em;
-    margin-left: 2em;
+    gap: 10px;
+    margin: 3em 0 0 2em;
     text-align: left;
-}
-
-@media (max-width: 700px) {
-    .cat-word-grid {
-        margin-top: 1em;
-        margin-left: 0em;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        grid-row-gap: 10px;
-        text-align: left;
-    }
-
-    .colors-item {
-        /* height: 250px; */
-        height: auto;
-        padding: 1em;
-    }
-
-    .color-selected {
-        /* height: 250px; */
-        height: auto;
-        border: 3px solid #f01482;
-    }
-}
-
-.uppercase {
-    text-transform: uppercase;
 }
 
 .inputs-grid {
     display: grid;
     grid-template-columns: 5fr 1fr;
     grid-template-rows: auto;
-    grid-column-gap: 20px;
-    grid-row-gap: 10px;
+    gap: 20px 10px;
     align-items: start;
     margin: 10px;
-    color: black;
+    color: var(--primary-text);
 }
 
+/* Button styles */
 .inputs-grid button {
     grid-column: 2;
     grid-row: 1 / span 2;
     height: 100%;
     background-color: var(--color-background);
     border-radius: 50px;
-    border-color: var(--color-primary);
-    border-style: solid;
+    border: solid var(--color-primary);
     padding: 1em 1.5em;
     cursor: pointer;
-    font-family: 'nyt-franklin';
+    font-family: "nyt-franklin";
     font-size: medium;
-    color: var(--color-primary)
+    color: var(--color-primary);
 }
 
 .inputs-grid button[disabled] {
@@ -237,14 +183,14 @@ legend {
     color: #6d6d6d;
 }
 
+/* Warning styles */
 .submit-warning {
     border: 1px solid rgb(62, 62, 62);
     display: flex;
     padding: 4px 10px;
     width: 800px;
     max-width: 90%;
-    margin: 0 auto;
-    margin-bottom: 5px;
+    margin: 0 auto 5px;
 }
 
 #warning-message {
@@ -254,4 +200,38 @@ legend {
 .submit-warning-close {
     margin-left: auto;
     cursor: pointer;
+}
+
+/* Utility classes */
+.title {
+    font-size: large;
+}
+
+.hotkey {
+    text-decoration: underline;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+/* Media queries */
+@media (max-width: 700px) {
+    .cat-word-grid {
+        margin: 1em 0;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 10px;
+        text-align: left;
+    }
+
+    .colors-item,
+    .color-selected {
+        height: auto;
+        padding: 1em;
+    }
+
+    .color-selected {
+        border: 3px solid var(--highlight-color);
+    }
 }

@@ -1,7 +1,11 @@
-{{ define "head" }}
-<link rel="stylesheet" href="/static/create.css">
-{{end}}
-{{ define "game" }}
+package templates
+
+
+templ CreateHead() {
+    <link rel="stylesheet" href="/static/create.css">
+}
+
+templ CreateBody(debug bool) {
 <div id="cat">
     <div class="colors">
         <div class="colors-item yellow">
@@ -54,11 +58,11 @@
             <div class="word-container">
                 <input type="text" id="word-input" placeholder="Enter words (4 total, 20 characters each max)" disabled>
             </div>
-            {{if eq .Debug true}}
+            if (debug) {
             <div class="input-container">
                 <input type="text" id="gameId-input" placeholder="game name">
             </div>
-            {{end}}
+            }
             <button id="save-categories-button" disabled>Save</button>
         </div>
     </fieldset>
@@ -71,6 +75,6 @@
         <button id="submit" disabled>Submit</button>
     </div>
 
-    <script src="/static/create.js" type="module">import { editCategories } from "/static/create.js"</script>
+    <script src="/static/create.js" type="module">fmt.Sprintf("import { editCategories } from '/static/create/js'")</script>
 </div>
-{{end}}
+}

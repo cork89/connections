@@ -1,0 +1,41 @@
+package templates
+
+import (
+    "fmt"
+    "com.github.cork89/connections/models"
+)
+
+templ MyGamesHead() {
+    <link rel="stylesheet" href="/static/mygames.css">
+}
+
+templ MyGamesBody(myGamesData models.MyGamesData) {
+    <div class="mygames">
+    <div class="copynotif">
+    </div>
+    <table>
+        <thead>
+            <th>Categories</th>
+            <th>Created</th>
+            <th>Link</th>
+            <th></th>
+        </thead>
+        <tbody>
+            for _, game := range myGamesData {            
+            <tr>
+                <td style="display:flex; flex-direction: column;">
+                    <span>🟡{ game.Categories.Yellow }</span>
+                    <span>🟢{ game.Categories.Green }</span>
+                    <span>🔵{ game.Categories.Blue }</span>
+                    <span>🟣{ game.Categories.Purple }</span>
+                </td>
+                <td>{game.CreatedDtTm}</td>
+                <td><a href={ templ.URL(fmt.Sprintf("/game/%s/", game.GameId)) }>{ game.ShortLink }</a></td>
+                <td><img height="24px" width="24px" src="/static/copy.svg"></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script src="/static/mygames.js" type="module"></script>
+}

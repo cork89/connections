@@ -1,41 +1,27 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"net/http"
-	"strings"
+
+	"com.github.cork89/connections/templates"
 )
 
-type Categories struct {
-	Yellow string
-	Green  string
-	Blue   string
-	Purple string
-}
+// type Categories struct {
+// 	Yellow string
+// 	Green  string
+// 	Blue   string
+// 	Purple string
+// }
 
-type MyGameData struct {
-	Categories  Categories
-	CreatedDtTm string
-	GameId      string
-	ShortLink   string
-}
+// type MyGameData struct {
+// 	Categories  Categories
+// 	CreatedDtTm string
+// 	GameId      string
+// 	ShortLink   string
+// }
 
-type MyGamesData []MyGameData
-
-func (mgd *MyGamesData) createShortLinks() {
-	for i := 0; i < len(*mgd); i++ {
-		gameId := (*mgd)[i].GameId
-
-		if len(gameId) > 15 {
-			(*mgd)[i].ShortLink = gameId[:strings.Index(gameId, "-")]
-		} else {
-			(*mgd)[i].ShortLink = gameId
-		}
-
-		createdDtTm := (*mgd)[i].CreatedDtTm
-		(*mgd)[i].CreatedDtTm = createdDtTm[:strings.Index(createdDtTm, "T")]
-	}
-}
+// type MyGamesData []MyGameData
 
 func mygamesHandler(w http.ResponseWriter, r *http.Request) {
 	session := r.Context().Value(SessionCtx).(string)
@@ -47,10 +33,15 @@ func mygamesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	myGamesData.createShortLinks()
-	fmt.Println(myGamesData)
+	myGamesData.CreateShortLinks()
 
-	err = tmpl["mygames"].ExecuteTemplate(w, "base.html", myGamesData)
+	// err = tmpl["mygames"].ExecuteTemplate(w, "base.html", myGamesData)
+
+	myGamesHead := templates.MyGamesHead()
+	myGamesBody := templates.MyGamesBody(myGamesData)
+	component := templates.Base(myGamesHead, myGamesBody)
+
+	err = component.Render(context.Background(), w)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

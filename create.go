@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,6 +11,9 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"com.github.cork89/connections/models"
+	"com.github.cork89/connections/templates"
 )
 
 type CreateData struct {
@@ -23,19 +27,19 @@ type VerifyResponse struct {
 	GameId        string `json:"gameId,omitempty"`
 }
 
-func (v *VerifyResponse) convertToWords() []Word {
+func (v *VerifyResponse) convertToWords() []models.Word {
 	if !v.Success {
 		return nil
 	}
-	words := make([]Word, 0)
+	words := make([]models.Word, 0)
 
 	colors := []VerifyCategory{v.Verify.Yellow, v.Verify.Green, v.Verify.Blue, v.Verify.Purple}
 
 	id := 0
 	for i, color := range colors {
-		category := Category{CategoryId: i + 1, CategoryName: color.Category}
+		category := models.Category{CategoryId: i + 1, CategoryName: color.Category}
 		for _, colorWord := range color.Words {
-			word := Word{Id: id, Word: colorWord, Category: category}
+			word := models.Word{Id: id, Word: colorWord, Category: category}
 			words = append(words, word)
 			id++
 		}
@@ -57,7 +61,7 @@ func (v *VerifyCategory) containsBadWords() bool {
 	return false
 }
 
-func (v *VerifyCategory) verifyColor(color Color) string {
+func (v *VerifyCategory) verifyColor(color models.Color) string {
 	if v.Category == "" {
 		return fmt.Sprintf(string(MissingCategory), color)
 	} else if len(v.Words) != 4 {
@@ -115,10 +119,10 @@ func filterEmptyResponses(responses []string) []string {
 }
 
 func (v *Verify) verify() string {
-	yellowResponse := v.Yellow.verifyColor(Yellow)
-	greenResponse := v.Green.verifyColor(Green)
-	blueResponse := v.Blue.verifyColor(Blue)
-	purpleResponse := v.Purple.verifyColor(Purple)
+	yellowResponse := v.Yellow.verifyColor(models.Yellow)
+	greenResponse := v.Green.verifyColor(models.Green)
+	blueResponse := v.Blue.verifyColor(models.Blue)
+	purpleResponse := v.Purple.verifyColor(models.Purple)
 	colorResponse := []string{yellowResponse, greenResponse, blueResponse, purpleResponse}
 
 	duplicates, ok := v.checkDuplicates()
@@ -246,7 +250,13 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 		createData.Debug = true
 	}
 
-	err := tmpl["create"].ExecuteTemplate(w, "base.html", createData)
+	createHead := templates.CreateHead()
+	createBody := templates.CreateBody(createData.Debug)
+	component := templates.Base(createHead, createBody)
+
+	err := component.Render(context.Background(), w)
+
+	// err := tmpl["create"].ExecuteTemplate(w, "base.html", createData)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

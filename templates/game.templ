@@ -1,0 +1,117 @@
+package templates
+
+import (
+	"com.github.cork89/connections/models"
+	"fmt"
+	"strings"
+)
+
+templ GameHead() {
+	<link rel="stylesheet" href="/static/game.css"/>
+}
+
+templ GameBody(board templ.Component, debug bool) {
+	<div id="board">
+		@board
+	</div>
+	<div class="buttons">
+		<button id="shuffleButton">Shuffle</button>
+		<button id="deselectButton">Deselect All</button>
+		<button id="checkButton" disabled>Submit</button>
+		if debug {
+			<button id="resetButton">Reset</button>
+		}
+	</div>
+	<div id="debug"></div>
+	<div id="gameover"></div>
+	<script src="/static/game.js" type="module"></script>
+}
+
+func longWordHandler(word string) bool {
+	startWords := strings.Split(word, " ")
+
+	longWord := false
+
+	for _, wd := range startWords {
+		if len(wd) < 9 {
+		} else {
+			longWord = true
+		}
+	}
+	return longWord
+}
+
+func getSelectionClass(word models.Word) string {
+	classes := ""
+	if word.Selected {
+		classes += "word selected"
+	} else {
+		classes += "word"
+	}
+	if longWordHandler(word.Word) {
+		classes += " long"
+	}
+	return classes
+}
+
+func getColor(categoryId int) models.Color {
+	if categoryId == 1 {
+		return models.Yellow
+	} else if categoryId == 2 {
+		return models.Green
+	} else if categoryId == 3 {
+		return models.Blue
+	} else if categoryId == 4 {
+		return models.Purple
+	} else {
+		return models.Undefined
+	}
+}
+
+func getOneAwayVisibility(result models.GuessResult) string {
+	if result == models.Three {
+		return "oneaway"
+	} else {
+		return "oneaway hidden"
+	}
+}
+
+templ GameBoard(selectedResponse models.SelectedResponse) {
+	<div id="oa">
+		<span class={ getOneAwayVisibility(selectedResponse.Result) }>One Away!</span>
+	</div>
+	<div id="connections" class="board0">
+		for _, answer := range selectedResponse.GameState.Answers {
+			<div class={ fmt.Sprintf("header %s", getColor(answer.Category.CategoryId)) }>
+				<span><b>{ answer.Category.CategoryName }</b></span>
+				<span>{ answer.Words }</span>
+			</div>
+		}
+		for _, word := range selectedResponse.GameState.Words {
+			if !word.Solved {
+				<div
+					id={ fmt.Sprintf("word%d", word.Id) }
+					class={ getSelectionClass(word) }
+				>
+					<span>{ word.Word }</span>
+				</div>
+			}
+		}
+	</div>
+	<div class="guesses">
+		<span style="font-family:'nyt-franklin';">Mistakes Remaining:</span>
+		for _ = range make([]struct{}, selectedResponse.GameState.GuessesRemaining) {
+			<span class="guesses-bubble"></span>
+		}
+	</div>
+	<div class="gamestatus">{ string(selectedResponse.Status) }</div>
+	if selectedResponse.GameOverData.IsGameOver {
+		<div id="gameOverModal" class="modal">
+			<div class="modal-content">
+				<span class="close" id="close-modal">&times;</span>
+				<span id="goMsg">{ string(selectedResponse.GameOverData.Message) }</span>
+				@templ.Raw(selectedResponse.GameOverData.Guy)
+			</div>
+		</div>
+	}
+}

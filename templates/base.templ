@@ -1,3 +1,6 @@
+package templates
+
+templ Base(head templ.Component, body templ.Component) {
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,9 +11,7 @@
     <title>We Connect</title>
     <link rel="stylesheet" href="/static/base.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <script defer data-domain="hearteyesemoji.dev" src="https://plausible.hearteyesemoji.dev/js/script.js"></script>
-    <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
-    {{template "head"}}
+    @head
 </head>
 
 <body>
@@ -18,13 +19,14 @@
         <a href="/">😍</a>
     </header>
     <div id="game">
-        {{template "game" .}}
+        @body
     </div>
     <footer>
         <span>© 2025 Heart Eyes Emoji. All rights reserved. Not affiliated with the New York Times.</span>
         <a href="https://github.com/cork89/connections" target="_blank"><img width="24px" height="24px"
-                src="static/github-mark.svg"></a>
+                src="/static/github-mark.svg"></a>
     </footer>
 </body>
 
 </html>
+}

@@ -7,28 +7,11 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
 	"com.github.cork89/connections/models"
 )
-
-func setup() {
-	// main()
-	badwords = []string{"badword"}
-}
-
-func TestMain(m *testing.M) {
-	// Setup code here
-	setup()
-
-	// Run the tests
-	exitCode := m.Run()
-	// Teardown code here
-	// teardown()
-	os.Exit(exitCode)
-}
 
 func TestVerifyCategory_containsBadWords(t *testing.T) {
 	tests := []struct {
@@ -467,17 +450,6 @@ func TestVerifyHandler(t *testing.T) {
 	}
 }
 
-type MockDataaccess struct{}
-
-func (MockDataaccess) createGame(gameId string, words []models.Word, session string) (string, error) {
-	if gameId == "error" {
-		return "", errors.New("create game error")
-	}
-	return "newGameID", nil
-}
-
-var mockDataaccess DataAccess = MockDataaccess{}
-
 func TestCreatePostHandler(t *testing.T) {
 	tests := []struct {
 		name           string
@@ -537,7 +509,7 @@ func TestCreatePostHandler(t *testing.T) {
 			req = req.WithContext(ctx)
 
 			w := httptest.NewRecorder()
-			createPostHandler(w, req, mockDataaccess)
+			createPostHandler(w, req, TestDataAccess)
 
 			if w.Code != tt.expectedStatus {
 				t.Errorf("Expected status code %d, got %d", tt.expectedStatus, w.Code)

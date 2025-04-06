@@ -7,22 +7,6 @@ import (
 	"com.github.cork89/connections/templates"
 )
 
-// type Categories struct {
-// 	Yellow string
-// 	Green  string
-// 	Blue   string
-// 	Purple string
-// }
-
-// type MyGameData struct {
-// 	Categories  Categories
-// 	CreatedDtTm string
-// 	GameId      string
-// 	ShortLink   string
-// }
-
-// type MyGamesData []MyGameData
-
 func mygamesHandler(w http.ResponseWriter, r *http.Request) {
 	session := r.Context().Value(SessionCtx).(string)
 
@@ -34,8 +18,6 @@ func mygamesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	myGamesData.CreateShortLinks()
-
-	// err = tmpl["mygames"].ExecuteTemplate(w, "base.html", myGamesData)
 
 	myGamesHead := templates.MyGamesHead()
 	myGamesBody := templates.MyGamesBody(myGamesData)

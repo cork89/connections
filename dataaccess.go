@@ -36,6 +36,11 @@ const (
 
 type DataAccess interface {
 	createGame(string, []models.Word, string) (string, error)
+	getGame(string) ([]models.Word, int64, error)
+	getGamestate(string, int64) (models.GameState, error)
+	updateGamestate(gameState models.GameState, session string, id int64) error
+	initGamestate(gameState models.GameState, session string, id int64) error
+	getRandomGame() (string, error)
 }
 
 type RealDataAccess struct{}
@@ -73,7 +78,7 @@ func initDataaccess() error {
 	return nil
 }
 
-func getGame(gameId string) ([]models.Word, int64, error) {
+func (RealDataAccess) getGame(gameId string) ([]models.Word, int64, error) {
 	ctx := context.Background()
 	words := make([]models.Word, 0)
 	game, err := queries.GetGame(ctx, gameId)
@@ -93,7 +98,7 @@ func getGame(gameId string) ([]models.Word, int64, error) {
 	return gameInfo.Words, game.ID, nil
 }
 
-func getRandomGame() (string, error) {
+func (RealDataAccess) getRandomGame() (string, error) {
 	ctx := context.Background()
 	game, err := queries.GetRandomGame(ctx)
 
@@ -184,7 +189,7 @@ func (RealDataAccess) createGame(gameId string, words []models.Word, session str
 	return gameId, nil
 }
 
-func initGamestate(gamestate models.GameState, session string, gameId int64) error {
+func (RealDataAccess) initGamestate(gamestate models.GameState, session string, gameId int64) error {
 	ctx := context.Background()
 
 	err := queries.DeleteGamestate(ctx, dataaccess.DeleteGamestateParams{GameID: gameId, UserID: session})
@@ -205,7 +210,7 @@ func initGamestate(gamestate models.GameState, session string, gameId int64) err
 	return err
 }
 
-func updateGamestate(gamestate models.GameState, session string, gameId int64) error {
+func (RealDataAccess) updateGamestate(gamestate models.GameState, session string, gameId int64) error {
 	ctx := context.Background()
 
 	gamestatebytes, err := json.Marshal(gamestate)
@@ -219,7 +224,7 @@ func updateGamestate(gamestate models.GameState, session string, gameId int64) e
 	return err
 }
 
-func getGamestate(session string, gameId int64) (models.GameState, error) {
+func (RealDataAccess) getGamestate(session string, gameId int64) (models.GameState, error) {
 	ctx := context.Background()
 
 	gamestate, err := queries.GetGamestate(ctx, dataaccess.GetGamestateParams{UserID: session, GameID: gameId})

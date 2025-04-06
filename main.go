@@ -116,15 +116,15 @@ func main() {
 
 	router.HandleFunc("GET /mygames/", mygamesHandler)
 
-	router.HandleFunc("POST /game/{gameId}/check/", checkHandler)
-	router.HandleFunc("POST /game/{gameId}/shuffle/", shuffleHandler)
-	router.HandleFunc("POST /game/{gameId}/deselectAll/", deselectHandler)
-	router.HandleFunc("POST /game/{gameId}/reset/", resetHandler)
-	router.HandleFunc("GET /game/{gameId}/", gameHandler)
+	router.HandleFunc("POST /game/{gameId}/check/", func(w http.ResponseWriter, r *http.Request) { checkHandler(w, r, realDataAccess) })
+	router.HandleFunc("POST /game/{gameId}/shuffle/", func(w http.ResponseWriter, r *http.Request) { shuffleHandler(w, r, realDataAccess) })
+	router.HandleFunc("POST /game/{gameId}/deselectAll/", func(w http.ResponseWriter, r *http.Request) { deselectHandler(w, r, realDataAccess) })
+	router.HandleFunc("POST /game/{gameId}/reset/", func(w http.ResponseWriter, r *http.Request) { resetHandler(w, r, realDataAccess) })
+	router.HandleFunc("GET /game/{gameId}/", func(w http.ResponseWriter, r *http.Request) { gameHandler(w, r, realDataAccess) })
 
 	// router.HandleFunc("GET /headsup/", headsupHandler)
 
-	router.HandleFunc("GET /random/", randomHandler)
+	router.HandleFunc("GET /random/", func(w http.ResponseWriter, r *http.Request) { randomHandler(w, r, realDataAccess) })
 	router.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/robots.txt")
 	})

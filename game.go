@@ -20,19 +20,18 @@ type RequestData struct {
 	Id        int64
 }
 
-var check models.SelectedRequest
-
 var validGameId = regexp.MustCompile("^[-_a-zA-Z0-9]{3,36}$")
 
 func ExtractGameId(r *http.Request) (string, error) {
 	m := validGameId.FindStringSubmatch(r.PathValue("gameId"))
+	fmt.Println(m, r.PathValue("gameId"))
 	if len(m) != 1 {
 		return "", errors.New("invalid game id")
 	}
 	return m[0], nil
 }
 
-func retrieveGameState(w http.ResponseWriter, r *http.Request) (RequestData, error) {
+func retrieveGameState(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) (RequestData, error) {
 	gameId, err := ExtractGameId(r)
 
 	var data RequestData
@@ -45,7 +44,7 @@ func retrieveGameState(w http.ResponseWriter, r *http.Request) (RequestData, err
 
 	session := r.Context().Value(SessionCtx).(string)
 
-	words, id, err := getGame(gameId)
+	words, id, err := dataaccess.getGame(gameId)
 
 	if err != nil {
 		log.Println("failed to retrieve game, err: ", err)
@@ -53,7 +52,7 @@ func retrieveGameState(w http.ResponseWriter, r *http.Request) (RequestData, err
 		return data, err
 	}
 
-	gameState, err := getGamestate(session, id)
+	gameState, err := dataaccess.getGamestate(session, id)
 
 	if err != nil {
 		log.Println("failed to retrieve game, err: ", err)
@@ -69,8 +68,8 @@ func retrieveGameState(w http.ResponseWriter, r *http.Request) (RequestData, err
 // if 4 words in a category are selected: "solve" that category and return board with category solved
 // if 3 words in a category are selected, decrement the remaining guesses and display a "One Away" message
 // if < 3 words in a category are selected, decrement the remaining guesses
-func checkHandler(w http.ResponseWriter, r *http.Request) {
-	requestData, err := retrieveGameState(w, r)
+func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
+	requestData, err := retrieveGameState(w, r, dataaccess)
 	if err != nil {
 		return
 	}
@@ -78,6 +77,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	words, gameState, session, id := requestData.Game, requestData.GameState, requestData.Session, requestData.Id
 
 	defer r.Body.Close()
+	var check models.SelectedRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&check); err != nil {
 		log.Printf("failed to unmarshal request body, err=%v\n", err)
@@ -126,7 +126,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 		// checkResponse.GameState = gameState
 	}
 
-	go updateGamestate(gameState, session, id)
+	go dataaccess.updateGamestate(gameState, session, id)
 
 	gameBoard := templates.GameBoard(checkResponse)
 	err = gameBoard.Render(context.Background(), w)
@@ -139,8 +139,8 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for /game/{gameId}/shuffle/
 // shuffles the game board, saves to db, and returns shuffled board
-func shuffleHandler(w http.ResponseWriter, r *http.Request) {
-	requestData, err := retrieveGameState(w, r)
+func shuffleHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess) {
+	requestData, err := retrieveGameState(w, r, dataacess)
 	if err != nil {
 		return
 	}
@@ -148,6 +148,7 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 	gameState, session, id := requestData.GameState, requestData.Session, requestData.Id
 
 	defer r.Body.Close()
+	var check models.SelectedRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&check); err != nil {
 		log.Printf("failed to unmarshal request body, err=%v\n", err)
@@ -157,7 +158,7 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 
 	gameState.SetSelected(check.Selected).Shuffle()
 
-	go updateGamestate(gameState, session, id)
+	go dataacess.updateGamestate(gameState, session, id)
 
 	checkResponse := models.SelectedResponse{GameState: gameState, Result: models.Other}
 
@@ -172,8 +173,8 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for /game/{gameId}/deselectAll/
 // deselect all selected words on the game board, saves to db, and returns board
-func deselectHandler(w http.ResponseWriter, r *http.Request) {
-	requestData, err := retrieveGameState(w, r)
+func deselectHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess) {
+	requestData, err := retrieveGameState(w, r, dataacess)
 	if err != nil {
 		return
 	}
@@ -181,7 +182,7 @@ func deselectHandler(w http.ResponseWriter, r *http.Request) {
 	gameState, session, id := requestData.GameState, requestData.Session, requestData.Id
 
 	gameState.DeselectAll()
-	err = updateGamestate(gameState, session, id)
+	err = dataacess.updateGamestate(gameState, session, id)
 
 	if err != nil {
 		log.Println("failed to update game state, err: ", err)
@@ -194,7 +195,7 @@ func deselectHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for /game/{gameId}/reset/
 // resets gameboard to initial state, saves to db, and returns board
-func resetHandler(w http.ResponseWriter, r *http.Request) {
+func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
 	gameId, err := ExtractGameId(r)
 
 	if err != nil {
@@ -205,7 +206,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 
 	session := r.Context().Value(SessionCtx).(string)
 
-	words, id, err := getGame(gameId)
+	words, id, err := dataaccess.getGame(gameId)
 
 	if err != nil {
 		log.Println("failed to retrieve game, err: ", err)
@@ -215,7 +216,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 
 	gameState := models.GameState{Words: words, GuessesRemaining: 4}
 	gameState.Shuffle()
-	err = initGamestate(gameState, session, id)
+	err = dataaccess.initGamestate(gameState, session, id)
 
 	if err != nil {
 		log.Println("failed to reset game state, err: ", err)
@@ -236,7 +237,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for /game/{gameId}/
 // retrieves the gameboard for a specific user session
-func gameHandler(w http.ResponseWriter, r *http.Request) {
+func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
 	gameId, err := ExtractGameId(r)
 
 	if err != nil {
@@ -244,7 +245,7 @@ func gameHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	words, id, err := getGame(gameId)
+	words, id, err := dataaccess.getGame(gameId)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 
@@ -263,12 +264,12 @@ func gameHandler(w http.ResponseWriter, r *http.Request) {
 
 	session := r.Context().Value(SessionCtx).(string)
 
-	gameState, err := getGamestate(session, id)
+	gameState, err := dataaccess.getGamestate(session, id)
 
 	if err != nil {
 		gameState = models.GameState{Words: words, GuessesRemaining: 4}
 		gameState.Shuffle()
-		go initGamestate(gameState, session, id)
+		go dataaccess.initGamestate(gameState, session, id)
 	}
 
 	gameResponse := models.SelectedResponse{GameState: gameState}
@@ -298,8 +299,8 @@ func gameHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for /random/
 // retrieve a random gameId and redirect to /game/{gameId}/
-func randomHandler(w http.ResponseWriter, r *http.Request) {
-	gameId, err := getRandomGame()
+func randomHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess) {
+	gameId, err := dataacess.getRandomGame()
 
 	if err != nil {
 		log.Println("failed to get random game, err: ", err)

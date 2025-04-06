@@ -111,7 +111,7 @@ func main() {
 	router.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	router.HandleFunc("GET /create/", createHandler)
-	router.HandleFunc("POST /create/", createPostHandler)
+	router.HandleFunc("POST /create/", func(w http.ResponseWriter, r *http.Request) { createPostHandler(w, r, realDataAccess) })
 	router.HandleFunc("POST /create/verify/", verifyHandler)
 
 	router.HandleFunc("GET /mygames/", mygamesHandler)

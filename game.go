@@ -130,7 +130,6 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 
 	gameBoard := templates.GameBoard(checkResponse)
 	err = gameBoard.Render(context.Background(), w)
-	// err = tmpl["board"].ExecuteTemplate(w, "board", checkResponse)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -238,7 +237,6 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 // Handler for /game/{gameId}/
 // retrieves the gameboard for a specific user session
 func gameHandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("gameHandler")
 	gameId, err := ExtractGameId(r)
 
 	if err != nil {
@@ -301,7 +299,6 @@ func gameHandler(w http.ResponseWriter, r *http.Request) {
 // Handler for /random/
 // retrieve a random gameId and redirect to /game/{gameId}/
 func randomHandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("randomHandler")
 	gameId, err := getRandomGame()
 
 	if err != nil {

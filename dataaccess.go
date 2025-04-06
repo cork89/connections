@@ -34,6 +34,14 @@ const (
 	PurpleId int = 4
 )
 
+type DataAccess interface {
+	createGame(string, []models.Word, string) (string, error)
+}
+
+type RealDataAccess struct{}
+
+var realDataAccess DataAccess = RealDataAccess{}
+
 func initDataaccess() error {
 	ctx := context.Background()
 	dbFile := "file:connections.db"
@@ -138,7 +146,7 @@ func getGamesByUser(session string) (models.MyGamesData, error) {
 	return myGamesData, nil
 }
 
-func createGame(gameId string, words []models.Word, session string) (string, error) {
+func (RealDataAccess) createGame(gameId string, words []models.Word, session string) (string, error) {
 	ctx := context.Background()
 
 	gameExists, err := queries.GameExists(ctx, gameId)

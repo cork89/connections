@@ -170,6 +170,7 @@ func verifyRequest(w http.ResponseWriter, r *http.Request) (VerifyResponse, erro
 	failureReason := verify.verify()
 	if failureReason != "" {
 		verifyResponse.FailureReason = failureReason
+		w.WriteHeader(http.StatusUnprocessableEntity)
 	} else {
 		verifyResponse.Success = true
 		verifyResponse.Verify = verify
@@ -186,12 +187,6 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !verifyResponse.Success {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-	} else {
-		w.WriteHeader(http.StatusOK)
-	}
-
 	bytes, err := json.Marshal(verifyResponse)
 
 	if err != nil {
@@ -204,7 +199,7 @@ func verifyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 }
 
-func createPostHandler(w http.ResponseWriter, r *http.Request) {
+func createPostHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
 	verifyResponse, err := verifyRequest(w, r)
 
 	if err != nil {
@@ -218,7 +213,7 @@ func createPostHandler(w http.ResponseWriter, r *http.Request) {
 
 		session := r.Context().Value(SessionCtx).(string)
 
-		gameId, err := createGame(verifyResponse.GameId, words, session)
+		gameId, err := dataaccess.createGame(verifyResponse.GameId, words, session)
 
 		if err != nil {
 			log.Println("failed to create game, err: ", err)
@@ -255,8 +250,6 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	component := templates.Base(createHead, createBody)
 
 	err := component.Render(context.Background(), w)
-
-	// err := tmpl["create"].ExecuteTemplate(w, "base.html", createData)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

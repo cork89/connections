@@ -92,6 +92,9 @@ func Session(next http.Handler) http.Handler {
 			}
 
 			http.SetCookie(w, cookie)
+		} else if cookie.MaxAge < int(time.Duration(168*time.Hour).Seconds()) {
+			cookie.MaxAge = int(time.Duration(2160 * time.Hour).Seconds())
+			http.SetCookie(w, cookie)
 		}
 
 		ctx := context.WithValue(r.Context(), SessionCtx, cookie.Value)

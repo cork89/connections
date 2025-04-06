@@ -1,0 +1,21 @@
+package templates
+
+templ HomeHead() {
+<link rel="stylesheet" href="/static/home.css">
+}
+
+templ HomeBody() {
+<div class="homebody">
+	<div class="homecopy">
+		<h1>Make your own connections game!</h1>
+	</div>
+	<div class="homehero">
+		<img src="/static/connecthero.webp" alt="Connections game demo screenshot">
+	</div>
+	<div class="buttons">
+		<a href="/create/"><button style="margin-right: 1em;">Create</button></a>
+		<a href="/mygames/"><button>My Games</button></a>
+		<a href="/random/"><button style="margin-left: 1em;">Play Random Game</button></a>
+	</div>
+</div>
+}

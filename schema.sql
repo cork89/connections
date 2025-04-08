@@ -14,3 +14,10 @@ CREATE TABLE IF NOT EXISTS gamestate (
   created_dt_tm TEXT NOT NULL,
   FOREIGN KEY(game_id) REFERENCES games(id)
 );
+
+CREATE TABLE IF NOT EXISTS ratelimit (
+  id INTEGER PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  calls_remaining INTEGER NOT NULL,
+  reset_dt_tm TEXT NOT NULL
+);

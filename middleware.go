@@ -136,3 +136,38 @@ func StaticCompression(next http.Handler) http.Handler {
 		next.ServeHTTP(writer, r)
 	})
 }
+
+func RateLimiter(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		cookie, err := r.Cookie("Session")
+
+		if err != nil {
+			log.Println("failed to retrieve session cookie, err: ", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		userId := cookie.Value
+
+		ratelimit, resetTime, err := getRatelimit(userId)
+
+		if err != nil {
+			if ratelimit == 5 {
+				_ = createRatelimit(userId)
+			} else {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+
+		if ratelimit == 0 && time.Now().Before(resetTime) {
+			w.WriteHeader(http.StatusTooManyRequests)
+			return
+		} else {
+			_ = updateRatelimit(userId, ratelimit, resetTime)
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}

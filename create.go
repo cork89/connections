@@ -14,6 +14,7 @@ import (
 
 	"com.github.cork89/connections/models"
 	"com.github.cork89/connections/templates"
+	"github.com/google/generative-ai-go/genai"
 )
 
 type CreateData struct {
@@ -255,4 +256,67 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func suggestionsHandler(w http.ResponseWriter, r *http.Request) {
+
+	defer r.Body.Close()
+
+	bytes, err := io.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("failed to read body, err: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	resp, err := model.GenerateContent(context.Background(), genai.Text(string(bytes)))
+	if err != nil {
+		log.Printf("failed to generate content: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if len(resp.Candidates) < 1 || len(resp.Candidates[0].Content.Parts) < 1 {
+		log.Println("no content parts in response")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	part := resp.Candidates[0].Content.Parts[0]
+
+	textPart, ok := part.(genai.Text)
+	if !ok {
+		log.Println("unexpected part type: not text")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	suggestion := string(textPart)
+	suggestions := strings.Split(suggestion, ",")
+
+	for i := range suggestions {
+		suggestions[i] = strings.TrimSpace(suggestions[i])
+	}
+
+	fmt.Println(suggestions)
+	// component := templates.CreateSuggestions(suggestions[0:4])
+
+	// err = component.Render(context.Background(), w)
+
+	jsonData, err := json.Marshal(suggestions)
+
+	if err != nil {
+		log.Println("failed to marshal json, err: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.Write(jsonData)
+
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// }
+	// w.Header().Set("Content-Type", "text/html")
 }

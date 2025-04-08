@@ -55,3 +55,18 @@ RETURNING *;
 -- name: DeleteGamestate :exec
 DELETE FROM gamestate
 WHERE game_id = ?  and user_id = ?;
+
+-- name: GetRateLimit :one
+SELECT *
+FROM ratelimit
+WHERE user_id = ?;
+
+-- name: UpdateRateLimit :one
+UPDATE ratelimit
+SET calls_remaining = ?, reset_dt_tm = ?
+WHERE user_id = ?
+RETURNING *;
+
+-- name: CreateRateLimit :exec
+INSERT INTO ratelimit (user_id, calls_remaining, reset_dt_tm)
+VALUES (?, ?, ?);

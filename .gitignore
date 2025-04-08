@@ -3,3 +3,4 @@ connections
 connections.db
 /utils/badwords.json
 /test/*.csv
+.env

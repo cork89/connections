@@ -19,3 +19,10 @@ type Gamestate struct {
 	GameState   string
 	CreatedDtTm string
 }
+
+type Ratelimit struct {
+	ID             int64
+	UserID         string
+	CallsRemaining int64
+	ResetDtTm      string
+}

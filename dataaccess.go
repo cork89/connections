@@ -243,3 +243,63 @@ func (RealDataAccess) getGamestate(session string, gameId int64) (models.GameSta
 
 	return state, err
 }
+
+func getRatelimit(userId string) (int, time.Time, error) {
+	ctx := context.Background()
+
+	ratelimit, err := queries.GetRateLimit(ctx, userId)
+
+	if err != nil {
+		err = createRatelimit(userId)
+		if err != nil {
+			return 5, time.Now().UTC().Add(1 * time.Minute), nil
+		} else {
+			log.Println("failed to retrieve ratelimit, err: ", err)
+			return 0, time.Time{}, err
+		}
+	}
+
+	resetTime, err := time.Parse(time.RFC3339, ratelimit.ResetDtTm)
+
+	if err != nil {
+		log.Println("failed to parse reset time, err: ", err)
+		return 0, time.Time{}, err
+	}
+
+	return int(ratelimit.CallsRemaining), resetTime, nil
+}
+
+func updateRatelimit(userId string, callsRemaining int, resetTime time.Time) error {
+	ctx := context.Background()
+
+	var resetTimeString string
+
+	if time.Now().After(resetTime) {
+		resetTimeString = time.Now().Add(1 * time.Minute).UTC().Format(time.RFC3339)
+		callsRemaining = 5
+	} else {
+		resetTimeString = resetTime.Format(time.RFC3339)
+		callsRemaining -= 1
+	}
+
+	_, err := queries.UpdateRateLimit(ctx, dataaccess.UpdateRateLimitParams{CallsRemaining: int64(callsRemaining), ResetDtTm: resetTimeString, UserID: userId})
+
+	if err != nil {
+		log.Println("failed to retrieve ratelimit, err: ", err)
+	}
+
+	return err
+}
+
+func createRatelimit(userId string) error {
+	ctx := context.Background()
+
+	resetTime := time.Now().UTC().Add(1 * time.Minute).Format(time.RFC3339)
+
+	err := queries.CreateRateLimit(ctx, dataaccess.CreateRateLimitParams{UserID: userId, CallsRemaining: 5, ResetDtTm: resetTime})
+
+	if err != nil {
+		log.Println("failed to create rate limit, err: ", err)
+	}
+	return err
+}

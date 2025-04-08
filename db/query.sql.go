@@ -77,6 +77,22 @@ func (q *Queries) CreateGamestate(ctx context.Context, arg CreateGamestateParams
 	return i, err
 }
 
+const createRateLimit = `-- name: CreateRateLimit :exec
+INSERT INTO ratelimit (user_id, calls_remaining, reset_dt_tm)
+VALUES (?, ?, ?)
+`
+
+type CreateRateLimitParams struct {
+	UserID         string
+	CallsRemaining int64
+	ResetDtTm      string
+}
+
+func (q *Queries) CreateRateLimit(ctx context.Context, arg CreateRateLimitParams) error {
+	_, err := q.db.ExecContext(ctx, createRateLimit, arg.UserID, arg.CallsRemaining, arg.ResetDtTm)
+	return err
+}
+
 const deleteGame = `-- name: DeleteGame :exec
 DELETE FROM games
 WHERE game_id = ?
@@ -209,6 +225,24 @@ func (q *Queries) GetRandomGame(ctx context.Context) (Game, error) {
 	return i, err
 }
 
+const getRateLimit = `-- name: GetRateLimit :one
+SELECT id, user_id, calls_remaining, reset_dt_tm
+FROM ratelimit
+WHERE user_id = ?
+`
+
+func (q *Queries) GetRateLimit(ctx context.Context, userID string) (Ratelimit, error) {
+	row := q.db.QueryRowContext(ctx, getRateLimit, userID)
+	var i Ratelimit
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.CallsRemaining,
+		&i.ResetDtTm,
+	)
+	return i, err
+}
+
 const updateGame = `-- name: UpdateGame :one
 UPDATE games
 SET game_info = ?
@@ -256,6 +290,31 @@ func (q *Queries) UpdateGamestate(ctx context.Context, arg UpdateGamestateParams
 		&i.GameID,
 		&i.GameState,
 		&i.CreatedDtTm,
+	)
+	return i, err
+}
+
+const updateRateLimit = `-- name: UpdateRateLimit :one
+UPDATE ratelimit
+SET calls_remaining = ?, reset_dt_tm = ?
+WHERE user_id = ?
+RETURNING id, user_id, calls_remaining, reset_dt_tm
+`
+
+type UpdateRateLimitParams struct {
+	CallsRemaining int64
+	ResetDtTm      string
+	UserID         string
+}
+
+func (q *Queries) UpdateRateLimit(ctx context.Context, arg UpdateRateLimitParams) (Ratelimit, error) {
+	row := q.db.QueryRowContext(ctx, updateRateLimit, arg.CallsRemaining, arg.ResetDtTm, arg.UserID)
+	var i Ratelimit
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.CallsRemaining,
+		&i.ResetDtTm,
 	)
 	return i, err
 }

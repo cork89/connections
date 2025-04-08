@@ -68,7 +68,7 @@ func CreateBody(debug bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button id=\"save-categories-button\" disabled>Save</button></div></fieldset><div class=\"submit-warning\" style=\"visibility: hidden;\"><img width=\"24px\" height=\"24px\" src=\"/static/info.svg\"> <span id=\"warning-message\"></span> <span class=\"submit-warning-close\" id=\"submit-warning-close\">x</span></div><div class=\"buttons\"><button id=\"submit\" disabled>Submit</button></div><script src=\"/static/create.js\" type=\"module\">fmt.Sprintf(\"import { editCategories } from '/static/create/js'\")</script></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button id=\"save-categories-button\" disabled>Save</button></div><div class=\"suggestions hidden\" id=\"suggestions\">Suggestions:</div></fieldset><div class=\"submit-warning\" style=\"visibility: hidden;\"><img width=\"24px\" height=\"24px\" src=\"/static/info.svg\"> <span id=\"warning-message\"></span> <span class=\"submit-warning-close\" id=\"submit-warning-close\">x</span></div><div class=\"buttons\"><button id=\"submit\" disabled>Submit</button></div><script src=\"/static/create.js\" type=\"module\">fmt.Sprintf(\"import { editCategories } from '/static/create/js'\")</script></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,4 +76,9 @@ func CreateBody(debug bool) templ.Component {
 	})
 }
 
+//	templ CreateSuggestions(suggestions []string) {
+//		for i, suggestion := range suggestions {
+//			<span class="suggestion" id={ fmt.Sprintf("sugg-%d", i) }>{ suggestion }</span>
+//		}
+//	}
 var _ = templruntime.GeneratedTemplate

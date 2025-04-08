@@ -28,6 +28,7 @@ const statesReverseMap: { [value: string]: States } = {
 type ColorCategory = {
     category: string
     words: Array<string>
+    suggestions: Array<string>
 }
 
 /**
@@ -59,19 +60,23 @@ function getEmptyCategories(): Categories {
     return {
         yellow: {
             category: "",
-            words: []
+            words: [],
+            suggestions: []
         },
         green: {
             category: "",
-            words: []
+            words: [],
+            suggestions: []
         },
         blue: {
             category: "",
-            words: []
+            words: [],
+            suggestions: []
         },
         purple: {
             category: "",
-            words: []
+            words: [],
+            suggestions: []
         }
     }
 }
@@ -171,6 +176,19 @@ function setupCreate() {
             ctx.state = States.NONE
             localStorage.setItem("ctx", JSON.stringify(ctx))
         }
+
+        if (!ctx.categories.yellow?.suggestions?.length) {
+            ctx.categories.yellow.suggestions = new Array()
+        }
+        if (!ctx.categories.green?.suggestions?.length) {
+            ctx.categories.green.suggestions = new Array()
+        }
+        if (!ctx.categories.blue?.suggestions?.length) {
+            ctx.categories.blue.suggestions = new Array()
+        }
+        if (!ctx.categories.purple?.suggestions?.length) {
+            ctx.categories.purple.suggestions = new Array()
+        }
     }
 
     createdGames = JSON.parse(localStorage.getItem("createdGames") ?? "[]")
@@ -210,6 +228,7 @@ function setupCreate() {
             const input = that.value.trim();
             if (input && currentCategory.length < 1) {
                 createCategory(input, that, true);
+                createSuggestions(input, true);
                 that.value = "";
             }
         } else if (event.key === "Backspace" || event.key === "Delete") {
@@ -333,6 +352,78 @@ function setupCreate() {
 
 setupCreate()
 
+function removeSuggestions() {
+    const suggestionContainer = document.getElementById("suggestions") as HTMLElement
+    suggestionContainer.innerHTML = "Suggestions:"
+    suggestionContainer.classList.add("hidden")
+}
+
+function generateSuggestions(suggestions: Array<string>) {
+    const suggestionContainer = document.getElementById("suggestions") as HTMLElement
+    let words = Array<string>()
+    if (ctx.state != States.NONE) {
+        words = ctx.categories[ctx.state].words
+    }
+
+    for (let i = 0; i < suggestions.length; ++i) {
+        const newSuggestion = document.createElement("div")
+
+        newSuggestion.textContent = suggestions[i]
+        newSuggestion.setAttribute("id", `sugg-${i}`)
+        if (i < 6) {
+            newSuggestion.setAttribute("class", "suggestion uppercase")
+        } else {
+            newSuggestion.setAttribute("class", "suggestion uppercase hidden")
+        }
+        if (words.includes(suggestions[i].toUpperCase())) {
+            newSuggestion.classList.add("disabled")
+        }
+        newSuggestion.addEventListener("click", () => {
+            if (!newSuggestion.classList.contains("disabled")) {
+                createWord(suggestions[i], document.getElementById("word-input") as HTMLInputElement, true)
+                newSuggestion.classList.add("disabled")
+            }
+        })
+        suggestionContainer.appendChild(newSuggestion)
+    }
+
+    suggestionContainer.classList.remove("hidden")
+}
+
+async function createSuggestions(category: string, refresh: boolean = false) {
+
+    if (ctx.state === States.NONE) return
+
+    if (ctx.categories[ctx.state].suggestions.length && !refresh) {
+        generateSuggestions(ctx.categories[ctx.state].suggestions)
+        return
+    }
+
+    if (refresh) {
+        removeSuggestions()
+    }
+
+    let body = `Topic\n\`\`\`\n${category}\n\`\`\``
+
+    const response = await fetch("/create/suggestions/", {
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "text/plain",
+        },
+        method: "POST",
+        body: JSON.stringify(body)
+    })
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`)
+    }
+
+    const suggestions: Array<string> = await response.json()
+
+    generateSuggestions(suggestions)
+    ctx.categories[ctx.state].suggestions = suggestions
+    localStorage.setItem("ctx", JSON.stringify(ctx))
+}
+
 /**
  * Displays all of the categories and words for each color group from context.
  */
@@ -381,6 +472,10 @@ function editColor(color: HTMLElement) {
         wordsInput.disabled = false
         saveCategoriesButton.disabled = false
         populateCategoriesAndWords()
+
+        if (ctx.state !== States.NONE) {
+            generateSuggestions(ctx.categories[ctx.state].suggestions)
+        }
         if (currentCategory.length > 0) {
             wordsInput.focus()
         } else {
@@ -400,6 +495,7 @@ function releaseColor(color: HTMLElement) {
     wordsInput.disabled = true
     saveCategoriesButton.disabled = true
     removeCategoriesAndWords()
+    removeSuggestions()
 }
 
 /**
@@ -640,7 +736,7 @@ function createWord(text: string, inputElement: HTMLInputElement, shouldSave: bo
     const remove = document.createElement("span")
     remove.classList.add("word-remove")
     remove.innerHTML = "&times;"
-    remove.addEventListener("click", (event) => removeWord(event.target as HTMLElement))
+    remove.addEventListener("click", (event) => removeWord(event.target as HTMLElement, true, true))
     word.innerHTML = text
     word.appendChild(remove)
     // word.innerHTML = `${text}`;
@@ -669,6 +765,10 @@ function removeWord(element: HTMLElement, findWord: boolean = true, shouldSave: 
     if (shouldSave) {
         saveCurrentCategoriesSilently(ctx.state)
     }
+    if (ctx.state !== States.NONE) {
+        removeSuggestions()
+        generateSuggestions(ctx.categories[ctx.state].suggestions)
+    }
 }
 
 const CATEGORY_CHAR_LIMIT = 40
@@ -694,7 +794,16 @@ function createCategory(text: string, inputElement: HTMLInputElement, shouldSave
     const categoryContainer = document.querySelector(".category-container") ?? (() => { throw new Error("category-container cannot be null") })()
     const category = document.createElement("div")
     category.className = "category"
-    category.innerHTML = `${text}<span class="word-remove" onclick="removeCategory(this)">&times;</span>`
+    // category.innerHTML = `${text}<span class="word-remove" onclick="removeCategory(this, true)">&times;</span>`
+
+
+    const remove = document.createElement("span")
+    remove.classList.add("word-remove")
+    remove.innerHTML = "&times;"
+    remove.addEventListener("click", (event) => removeCategory(event.target as HTMLElement, true))
+    category.innerHTML = text
+    category.appendChild(remove)
+
     categoryContainer.insertBefore(category, inputElement)
     currentCategory.push(category)
     if (shouldSave) {
@@ -710,7 +819,10 @@ function createCategory(text: string, inputElement: HTMLInputElement, shouldSave
 function removeCategory(element: HTMLElement, shouldSave: boolean = false) {
     element.parentElement?.remove();
     categoryInput.focus()
-    if (shouldSave) {
-        saveCurrentCategoriesSilently(ctx.state)
+    currentCategory.splice(0, 1)
+    if (shouldSave && ctx.state !== States.NONE) {
+        ctx.categories[ctx.state].category = ""
+        localStorage.setItem("ctx", JSON.stringify(ctx))
+        displayCategoryAndWords()
     }
 }

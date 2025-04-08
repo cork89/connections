@@ -215,6 +215,30 @@ legend {
     text-transform: uppercase;
 }
 
+.suggestions {
+    display: flex;
+    gap: 4px;
+    margin: 4px 10px;
+    align-items: center;
+}
+
+.suggestion {
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.disabled {
+    border-color: gray;
+    color: gray;
+    cursor: not-allowed;
+}
+
 /* Media queries */
 @media (max-width: 700px) {
     .cat-word-grid {

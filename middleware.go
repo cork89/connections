@@ -71,6 +71,11 @@ func Logging(next http.Handler) http.Handler {
 
 func Session(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		cookie, err := r.Cookie(CookieName)
 		if err != nil {
 			temp, err := uuid.NewV7()

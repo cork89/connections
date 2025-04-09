@@ -71,11 +71,6 @@ func Logging(next http.Handler) http.Handler {
 
 func Session(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			next.ServeHTTP(w, r)
-			return
-		}
-
 		cookie, err := r.Cookie(CookieName)
 		if err != nil {
 			temp, err := uuid.NewV7()
@@ -95,10 +90,11 @@ func Session(next http.Handler) http.Handler {
 				Secure:   true,
 				SameSite: http.SameSiteLaxMode,
 			}
-
-			http.SetCookie(w, cookie)
 		} else if cookie.MaxAge < int(time.Duration(168*time.Hour).Seconds()) {
 			cookie.MaxAge = int(time.Duration(2160 * time.Hour).Seconds())
+		}
+
+		if r.URL.Path == "/" {
 			http.SetCookie(w, cookie)
 		}
 

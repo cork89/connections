@@ -38,6 +38,12 @@ WHERE game_id = ?;
 SELECT * FROM gamestate
 WHERE game_id = ? AND user_id = ? LIMIT 1;
 
+-- name: GetRecentGamestatesByUser :many
+SELECT gs.game_state, g.game_id, gs.created_dt_tm FROM gamestate gs, games g
+WHERE gs.user_id=? and gs.game_id=g.id and g.created_user_id !=gs.user_id
+ORDER BY gs.created_dt_tm DESC
+LIMIT 10;
+
 -- name: CreateGamestate :one
 INSERT INTO gamestate (
   user_id, game_id, game_state, created_dt_tm

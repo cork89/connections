@@ -151,6 +151,65 @@ func getGamesByUser(session string) (models.MyGamesData, error) {
 	return myGamesData, nil
 }
 
+func getRecentGamesByUser(session string) (models.MyGamesData, error) {
+	ctx := context.Background()
+	gamestates, err := queries.GetRecentGamestatesByUser(ctx, session)
+
+	var myGamesData models.MyGamesData
+
+	if err != nil {
+		return myGamesData, err
+	}
+
+	myGamesData = make([]models.MyGameData, 0, len(gamestates))
+
+	for _, v := range gamestates {
+		var gameState models.GameState
+
+		err = json.Unmarshal([]byte(v.GameState), &gameState)
+
+		if err != nil {
+			return myGamesData, err
+		}
+
+		if len(gameState.Answers) == 0 {
+			continue
+		}
+
+		var categories models.Categories
+
+		for _, word := range gameState.Answers {
+			if word.Category.CategoryId == YellowId {
+				categories.Yellow = word.Category.CategoryName
+			} else if word.Category.CategoryId == GreenId {
+				categories.Green = word.Category.CategoryName
+			} else if word.Category.CategoryId == BlueId {
+				categories.Blue = word.Category.CategoryName
+			} else if word.Category.CategoryId == PurpleId {
+				categories.Purple = word.Category.CategoryName
+			}
+		}
+
+		if categories.Yellow == "" {
+			categories.Yellow = "-"
+		}
+		if categories.Green == "" {
+			categories.Green = "-"
+		}
+		if categories.Blue == "" {
+			categories.Blue = "-"
+		}
+		if categories.Purple == "" {
+			categories.Purple = "-"
+		}
+
+		var myGame = models.MyGameData{Categories: categories, CreatedDtTm: v.CreatedDtTm, GameId: v.GameID}
+
+		myGamesData = append(myGamesData, myGame)
+	}
+	return myGamesData, nil
+}
+
 func (RealDataAccess) createGame(gameId string, words []models.Word, session string) (string, error) {
 	ctx := context.Background()
 

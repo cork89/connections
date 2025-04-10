@@ -9,7 +9,18 @@ templ MyGamesHead() {
 	<link id="pagecss" rel="stylesheet" href="/static/mygames.css"/>
 }
 
-templ MyGamesBody(myGamesData models.MyGamesData) {
+templ MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesData, display models.MyGamesDisplay) {
+	<label class="tp-container">
+		if display.Checked {
+			<input id="tp-checkbox" type="checkbox" class="tp-checkbox" checked="true"/>
+		} else {
+			<input id="tp-checkbox" type="checkbox" class="tp-checkbox"/>
+		}
+		<div class="checkable-area">
+			<div class="label left-label">Created</div>
+			<div class="label right-label">Played</div>
+		</div>
+	</label>
 	<div class="mygames">
 		<div class="copynotif"></div>
 		<table>
@@ -19,8 +30,23 @@ templ MyGamesBody(myGamesData models.MyGamesData) {
 				<th>Link</th>
 				<th></th>
 			</thead>
-			<tbody>
+			<tbody id="my-games" class={ fmt.Sprint(display.Created) }>
 				for _, game := range myGamesData {
+					<tr>
+						<td style="display:flex; flex-direction: column;">
+							<span>🟡{ game.Categories.Yellow }</span>
+							<span>🟢{ game.Categories.Green }</span>
+							<span>🔵{ game.Categories.Blue }</span>
+							<span>🟣{ game.Categories.Purple }</span>
+						</td>
+						<td>{ game.CreatedDtTm }</td>
+						<td><a href={ templ.URL(fmt.Sprintf("/game/%s/", game.GameId)) }>{ game.ShortLink }</a></td>
+						<td><img height="24px" width="24px" src="/static/copy.svg"/></td>
+					</tr>
+				}
+			</tbody>
+			<tbody id="recent-games" class={ fmt.Sprint(display.Recent) }>
+				for _, game := range myRecentGames {
 					<tr>
 						<td style="display:flex; flex-direction: column;">
 							<span>🟡{ game.Categories.Yellow }</span>
@@ -36,5 +62,7 @@ templ MyGamesBody(myGamesData models.MyGamesData) {
 			</tbody>
 		</table>
 	</div>
-	<script src="/static/mygames.js" type="module"></script>
+	<script src="/static/mygames.js" type="module">
+    import {flipTables} from "/static/mygames.js"
+    </script>
 }

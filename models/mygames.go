@@ -32,3 +32,28 @@ func (mgd *MyGamesData) CreateShortLinks() {
 		(*mgd)[i].CreatedDtTm = createdDtTm[:strings.Index(createdDtTm, "T")]
 	}
 }
+
+type Void string
+
+const (
+	void  Void = "void"
+	empty Void = ""
+)
+
+type MyGamesDisplay struct {
+	Created Void
+	Recent  Void
+	Checked bool
+}
+
+func (d *MyGamesDisplay) DetermineDisplays(queryVal string) {
+	if queryVal == "recent" {
+		d.Recent = empty
+		d.Created = void
+		d.Checked = true
+	} else {
+		d.Recent = void
+		d.Created = empty
+		d.Checked = false
+	}
+}

@@ -35,3 +35,26 @@ async function copyGamelink(gameLink: HTMLAnchorElement) {
         }
     }
 }
+
+var tpCheckbox = document.getElementById("tp-checkbox") as HTMLElement
+var myGames = document.getElementById("my-games") as HTMLElement
+var recentGames = document.getElementById("recent-games") as HTMLElement
+var url = new URL(window.location.toString())
+var urlParams = new URLSearchParams(url.search)
+
+// Flip from the created to recent played tables and vice versa
+function flipTables(): void {
+    if (myGames.classList.contains("void")) {
+        myGames.classList.remove("void")
+        recentGames.classList.add("void")
+        urlParams.set("table", "created")
+    } else {
+        myGames.classList.add("void")
+        recentGames.classList.remove("void")
+        urlParams.set("table", "recent")
+    }
+    url.search = urlParams.toString()
+    window.history.pushState(null, "", url.toString())
+}
+
+tpCheckbox.addEventListener("change", flipTables)

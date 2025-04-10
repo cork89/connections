@@ -243,6 +243,42 @@ func (q *Queries) GetRateLimit(ctx context.Context, userID string) (Ratelimit, e
 	return i, err
 }
 
+const getRecentGamestatesByUser = `-- name: GetRecentGamestatesByUser :many
+SELECT gs.game_state, g.game_id, gs.created_dt_tm FROM gamestate gs, games g
+WHERE gs.user_id=? and gs.game_id=g.id and g.created_user_id !=gs.user_id
+ORDER BY gs.created_dt_tm DESC
+LIMIT 10
+`
+
+type GetRecentGamestatesByUserRow struct {
+	GameState   string
+	GameID      string
+	CreatedDtTm string
+}
+
+func (q *Queries) GetRecentGamestatesByUser(ctx context.Context, userID string) ([]GetRecentGamestatesByUserRow, error) {
+	rows, err := q.db.QueryContext(ctx, getRecentGamestatesByUser, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetRecentGamestatesByUserRow
+	for rows.Next() {
+		var i GetRecentGamestatesByUserRow
+		if err := rows.Scan(&i.GameState, &i.GameID, &i.CreatedDtTm); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateGame = `-- name: UpdateGame :one
 UPDATE games
 SET game_info = ?

@@ -1,7 +1,7 @@
 .mygames {
     display: flex;
     justify-content: center;
-    margin: 5em 0;
+    margin: 1em 0;
     font-family: "nyt-franklin", sans-serif;
 }
 
@@ -89,6 +89,62 @@ img:hover {
     background: var(--color-background);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: visibility 0.3s ease;
+}
+
+.tp-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-mygames);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.tp-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkable-area {
+    display: flex;
+    width: 100%;
+}
+
+.label {
+    padding: 10px 15px;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+    user-select: none;
+    flex: 1;
+    font-family: 'nyt-franklin';
+    font-size: small;
+}
+
+.left-label {
+    border-right: 1px solid #ccc;
+    background-color: var(--color-header);
+    color: black;
+}
+
+.right-label {
+    background-color: #eee;
+    color: #333;
+}
+
+.tp-checkbox:checked~.checkable-area .left-label {
+    background-color: #eee;
+    color: #333;
+}
+
+.tp-checkbox:checked~.checkable-area .right-label {
+    background-color: var(--color-header);
+    color: black;
 }
 
 @media (prefers-color-scheme: dark) {

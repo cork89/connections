@@ -196,6 +196,10 @@ footer a {
     cursor: pointer;
 }
 
+.wrap {
+    user-select: none;
+}
+
 @media (max-width:900px) {
     .links {
         display: none;

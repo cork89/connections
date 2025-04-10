@@ -37,7 +37,7 @@ func Base(head templ.Component, body templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</head><body><header><a href=\"/\">😍</a></header><svg xmlns=\"http://www.w3.org/2000/svg\" id=\"sidebar-hamburger\" fill=\"none\" viewBox=\"0 0 24 24\" width=\"24px\" height=\"24px\" stroke-width=\"1.5\" stroke=\"currentColor\" onclick=\"openSidebar();\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5\"></path></svg><div class=\"links\"><a href=\"/\"><button id=\"homebtn\">Home</button></a> <a href=\"/create/\"><button id=\"createbtn\">Create</button></a> <a href=\"/mygames/\"><button id=\"mygamesbtn\">My Games</button></a> <a href=\"/random/\"><button id=\"playrdm\">Play Random</button></a></div><div id=\"game\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</head><body><header><a href=\"/\">😍</a></header><div class=\"wrap\"><svg xmlns=\"http://www.w3.org/2000/svg\" id=\"sidebar-hamburger\" fill=\"none\" viewBox=\"0 0 24 24\" width=\"24px\" height=\"24px\" stroke-width=\"1.5\" stroke=\"currentColor\" onclick=\"openSidebar();\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5\"></path></svg></div><div class=\"links\"><a href=\"/\"><button id=\"homebtn\">Home</button></a> <a href=\"/create/\"><button id=\"createbtn\">Create</button></a> <a href=\"/mygames/\"><button id=\"mygamesbtn\">My Games</button></a> <a href=\"/random/\"><button id=\"playrdm\">Play Random</button></a></div><div id=\"game\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

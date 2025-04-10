@@ -1,7 +1,7 @@
 package templates
 
 templ CreateHead() {
-	<link rel="stylesheet" href="/static/create.css"/>
+	<link id="pagecss" rel="stylesheet" href="/static/create.css"/>
 }
 
 templ CreateBody(debug bool) {
@@ -84,7 +84,7 @@ templ CreateBody(debug bool) {
 				}
 				<button id="save-categories-button" disabled>Save</button>
 			</div>
-			<div class="suggestions hidden" id="suggestions">Suggestions:</div>
+			<div class="suggestions void" id="suggestions">Suggestions:</div>
 		</fieldset>
 		<div class="submit-warning" style="visibility: hidden;">
 			<img width="24px" height="24px" src="/static/info.svg"/>
@@ -94,7 +94,12 @@ templ CreateBody(debug bool) {
 		<div class="buttons">
 			<button id="submit" disabled>Submit</button>
 		</div>
-		<script src="/static/create.js" type="module">fmt.Sprintf("import { editCategories } from '/static/create/js'")</script>
+		<script src="/static/create.js" type="module" hx-on::load="setupCreate()">
+			// fmt.Sprintf("import { editCategories } from '/static/create/js'")
+			// htmx.load(function(elt){
+			// 	setupCreate()
+    		// })
+		</script>
 	</div>
 }
 

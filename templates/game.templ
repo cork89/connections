@@ -7,7 +7,7 @@ import (
 )
 
 templ GameHead() {
-	<link rel="stylesheet" href="/static/game.css"/>
+	<link id="pagecss" rel="stylesheet" href="/static/game.css"/>
 }
 
 templ GameBody(board templ.Component, debug bool) {
@@ -24,7 +24,8 @@ templ GameBody(board templ.Component, debug bool) {
 	</div>
 	<div id="debug"></div>
 	<div id="gameover"></div>
-	<script src="/static/game.js" type="module"></script>
+	<script src="/static/game.js" type="module">
+	</script>
 }
 
 func longWordHandler(word string) bool {

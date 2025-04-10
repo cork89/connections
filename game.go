@@ -235,14 +235,13 @@ func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 	}
 }
 
-// Handler for /game/{gameId}/
-// retrieves the gameboard for a specific user session
-func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
+// Retrieve the game board for a user session and game id
+func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) (*models.SelectedResponse, error) {
 	gameId, err := ExtractGameId(r)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	words, id, err := dataaccess.getGame(gameId)
@@ -256,10 +255,10 @@ func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) 
 		if err != nil {
 			log.Println("failed to load 404 tmpl, err: ", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return nil, err
 		}
 
-		return
+		return nil, err
 	}
 
 	session := r.Context().Value(SessionCtx).(string)
@@ -283,9 +282,20 @@ func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) 
 	if debugParam == "1" {
 		gameResponse.Debug = true
 	}
+	return &gameResponse, nil
+}
+
+// Handler for /game/{gameId}/
+// retrieves the gameboard for a specific user session
+func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
+	gameResponse, err := getGameResponse(w, r, dataaccess)
+
+	if err != nil {
+		return
+	}
 
 	gameHead := templates.GameHead()
-	gameBoard := templates.GameBoard(gameResponse)
+	gameBoard := templates.GameBoard(*gameResponse)
 	gameBody := templates.GameBody(gameBoard, gameResponse.Debug)
 	component := templates.Base(gameHead, gameBody)
 
@@ -299,8 +309,8 @@ func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) 
 
 // Handler for /random/
 // retrieve a random gameId and redirect to /game/{gameId}/
-func randomHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess) {
-	gameId, err := dataacess.getRandomGame()
+func randomHandler(w http.ResponseWriter, dataaccess DataAccess) {
+	gameId, err := dataaccess.getRandomGame()
 
 	if err != nil {
 		log.Println("failed to get random game, err: ", err)
@@ -315,4 +325,47 @@ func randomHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess)
 	w.Header().Set("Location", redirectURL)
 	w.WriteHeader(http.StatusFound)
 	log.Println("redirect issued")
+}
+
+// Handler for /randomHtmx/
+// retrieve a random gameId and render the game for /game/{gameId}/
+func randomHtmxHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) {
+	gameId, err := dataaccess.getRandomGame()
+
+	if err != nil {
+		log.Println("failed to get random game, err: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	r.SetPathValue("gameId", gameId)
+
+	gameResponse, err := getGameResponse(w, r, dataaccess)
+
+	if err != nil {
+		return
+	}
+
+	w.Header().Set("HX-Push-Url", fmt.Sprintf("/game/%s/", gameId))
+	w.Header().Set("Content-Type", "text/html")
+
+	gameHead := templates.GameHead()
+	gameBoard := templates.GameBoard(*gameResponse)
+	gameBody := templates.GameBody(gameBoard, gameResponse.Debug)
+	component := templates.BaseHtmx(gameHead, gameBody)
+
+	err = component.Render(context.Background(), w)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// redirectURL := fmt.Sprintf("/game/%s/", gameId)
+
+	// log.Printf("randomHandler: Redirecting to: %s", redirectURL)
+
+	// w.Header().Set("Location", redirectURL)
+	// w.WriteHeader(http.StatusFound)
+	// log.Println("redirect issued")
 }

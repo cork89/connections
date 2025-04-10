@@ -17,12 +17,13 @@ p {
 }
 
 .homecopy {
-    margin-top: 10em;
+    margin-top: 6em;
 }
 
 .homecopy h1 {
     font-family: 'nyt-franklin';
     text-align: center;
+    font-size: 40px;
 }
 
 @media (max-height:750px) {

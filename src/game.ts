@@ -71,7 +71,7 @@ async function reset() {
         }
 
         guesses.splice(0, guesses.length)
-        init()
+        setupGame()
     } catch (error) {
         if (isErrorWithProperty(error, "message")) {
             console.error(error.message)
@@ -141,7 +141,7 @@ async function check() {
             }, 3000)
         }
 
-        init()
+        setupGame()
 
     } catch (error) {
         if (isErrorWithProperty(error, "message")) {
@@ -190,7 +190,7 @@ async function shuffle() {
     // }
     board.innerHTML = await shuffleData()
     // nextBoard = await shuffleData()
-    init()
+    setupGame()
 }
 
 /**
@@ -330,7 +330,7 @@ function closeModalEmptySpace(event: PointerEvent) {
 /**
  * Initialize the board by adding a click handler to each word for attempting selection.  Reset the selected words.
  */
-function init() {
+function setupGame() {
     for (let i = 0; i < words.length; i++) {
         words[i].addEventListener("click", attemptSelection)
     }
@@ -342,4 +342,4 @@ function init() {
     }
 }
 
-init()
+setupGame()

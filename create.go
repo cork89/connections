@@ -238,6 +238,25 @@ func createPostHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAc
 	w.Write(bytes)
 }
 
+func createHtmxHandler(w http.ResponseWriter, r *http.Request) {
+	var createData CreateData
+
+	debugParam := r.FormValue("debug")
+	if debugParam == "1" {
+		createData.Debug = true
+	}
+	w.Header().Set("Content-Type", "text/html")
+
+	head := templates.CreateHead()
+	body := templates.CreateBody(createData.Debug)
+	component := templates.BaseHtmx(head, body)
+	err := component.Render(context.Background(), w)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func createHandler(w http.ResponseWriter, r *http.Request) {
 	var createData CreateData
 

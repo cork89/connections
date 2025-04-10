@@ -23,10 +23,11 @@
     --yellow-color: #f8df6d;
     --color-primary: #000;
     --color-background: #fff;
-    --color-header: #fff;
+    --color-header: var(--purple-color);
     --color-footer: #5e5e5e;
     --color-mygames: rgb(237 238 242);
     --color-create-input: #fff;
+    --color-secondary: var(--purple-color);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,6 +38,7 @@
         --color-footer: #c4c2c2;
         --color-mygames: rgb(49, 49, 49);
         --color-create-input: #bdbdbd;
+        --color-secondary: var(--blue-color);
     }
 }
 
@@ -118,6 +120,10 @@ header a:visited {
     flex: 1;
 }
 
+.sidebar-padding {
+    margin-left: 300px;
+}
+
 footer {
     display: flex;
     align-items: center;
@@ -134,6 +140,74 @@ footer span {
 footer a {
     position: absolute;
     right: 10px;
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--color-background);
+    padding: 20px;
+    padding-top: 60px;
+    box-sizing: border-box;
+    border-right: 1px solid var(--color-secondary);
+    z-index: 2;
+}
+
+.links a {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.links button {
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border: 1px solid #aaa;
+    background-color: var(--color-background);
+    text-align: left;
+    border-radius: 8px;
+    color: var(--color-primary);
+    font-size: 16px;
+    font-family: 'nyt-franklin';
+}
+
+.links button:hover {
+    background-color: var(--color-mygames);
+}
+
+.void {
+    display: none !important;
+}
+
+#sidebar-hamburger {
+    position: absolute;
+    z-index: 99;
+    top: 8px;
+    left: 8px;
+    color: rgb(24, 24, 24);
+    cursor: pointer;
+}
+
+@media (max-width:900px) {
+    .links {
+        display: none;
+    }
+
+    .sidebar-padding {
+        margin-left: 0px;
+    }
+}
+
+.open {
+    display: flex;
 }
 
 @media (prefers-color-scheme: dark) {

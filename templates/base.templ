@@ -10,14 +10,23 @@ templ Base(head templ.Component, body templ.Component) {
 			<title>We Connect</title>
 			<link rel="stylesheet" href="/static/base.css"/>
 			<link rel="icon" type="image/x-icon" href="/static/favicon.ico"/>
-			<script defer data-domain="hearteyesemoji.dev" src="https://plausible.hearteyesemoji.dev/js/script.js"></script>
-			<script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+			// <script defer data-domain="hearteyesemoji.dev" src="https://plausible.hearteyesemoji.dev/js/script.js"></script>
+			// <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
 			@head
 		</head>
 		<body>
 			<header>
 				<a href="/">😍</a>
 			</header>
+			<svg xmlns="http://www.w3.org/2000/svg" id="sidebar-hamburger" fill="none" viewBox="0 0 24 24" width="24px" height="24px" stroke-width="1.5" stroke="currentColor" onclick="openSidebar();">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+			</svg>
+			<div class="links">
+				<a href="/"><button id="homebtn">Home</button></a>
+				<a href="/create/"><button id="createbtn">Create</button></a>
+				<a href="/mygames/"><button id="mygamesbtn">My Games</button></a>
+				<a href="/random/"><button id="playrdm">Play Random</button></a>
+			</div>
 			<div id="game">
 				@body
 			</div>
@@ -31,6 +40,43 @@ templ Base(head templ.Component, body templ.Component) {
 					/>
 				</a>
 			</footer>
+			<script>
+				var sidebarOpen
+				var sidebar
+				var gamestatus
+
+				function init() {
+					sidebarOpen = window.innerWidth > 900 ? true : false
+					sidebar = document.getElementsByClassName("links")[0]
+					game = document.getElementById("game")
+
+					if (sidebarOpen) {
+						game.classList.add("sidebar-padding")
+					}
+				}
+				
+				function openSidebar() {
+					if (sidebarOpen) {
+						sidebar.classList.remove("open")
+						sidebar.classList.add("void")
+						game.classList.remove("sidebar-padding")
+					} else {
+						sidebar.classList.remove("void")
+						sidebar.classList.add("open")
+						game.classList.add("sidebar-padding")
+					}
+					sidebarOpen = !sidebarOpen
+				}
+
+				init()
+			</script>
 		</body>
 	</html>
+}
+
+templ BaseHtmx(head templ.Component, body templ.Component) {
+	<div id="game">
+		@body
+	</div>
+	@head
 }

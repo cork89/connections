@@ -29,7 +29,7 @@ func Base(head templ.Component, body templ.Component) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"description\" content=\"Create and play custom nyt connections games!\"><title>We Connect</title><link rel=\"stylesheet\" href=\"/static/base.css\"><link rel=\"icon\" type=\"image/x-icon\" href=\"/static/favicon.ico\"><script defer data-domain=\"hearteyesemoji.dev\" src=\"https://plausible.hearteyesemoji.dev/js/script.js\"></script><script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"description\" content=\"Create and play custom nyt connections games!\"><title>We Connect</title><link rel=\"stylesheet\" href=\"/static/base.css\"><link rel=\"icon\" type=\"image/x-icon\" href=\"/static/favicon.ico\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -37,7 +37,7 @@ func Base(head templ.Component, body templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</head><body><header><a href=\"/\">😍</a></header><div id=\"game\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</head><body><header><a href=\"/\">😍</a></header><svg xmlns=\"http://www.w3.org/2000/svg\" id=\"sidebar-hamburger\" fill=\"none\" viewBox=\"0 0 24 24\" width=\"24px\" height=\"24px\" stroke-width=\"1.5\" stroke=\"currentColor\" onclick=\"openSidebar();\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5\"></path></svg><div class=\"links\"><a href=\"/\"><button id=\"homebtn\">Home</button></a> <a href=\"/create/\"><button id=\"createbtn\">Create</button></a> <a href=\"/mygames/\"><button id=\"mygamesbtn\">My Games</button></a> <a href=\"/random/\"><button id=\"playrdm\">Play Random</button></a></div><div id=\"game\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -45,7 +45,48 @@ func Base(head templ.Component, body templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><footer><span>© 2025 Heart Eyes Emoji. All rights reserved. Not affiliated with the New York Times.</span> <a href=\"https://github.com/cork89/connections\" target=\"_blank\"><img width=\"24px\" height=\"24px\" src=\"/static/github-mark.svg\"></a></footer></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><footer><span>© 2025 Heart Eyes Emoji. All rights reserved. Not affiliated with the New York Times.</span> <a href=\"https://github.com/cork89/connections\" target=\"_blank\"><img width=\"24px\" height=\"24px\" src=\"/static/github-mark.svg\"></a></footer><script>\n\t\t\t\tvar sidebarOpen\n\t\t\t\tvar sidebar\n\t\t\t\tvar gamestatus\n\n\t\t\t\tfunction init() {\n\t\t\t\t\tsidebarOpen = window.innerWidth > 900 ? true : false\n\t\t\t\t\tsidebar = document.getElementsByClassName(\"links\")[0]\n\t\t\t\t\tgame = document.getElementById(\"game\")\n\n\t\t\t\t\tif (sidebarOpen) {\n\t\t\t\t\t\tgame.classList.add(\"sidebar-padding\")\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tfunction openSidebar() {\n\t\t\t\t\tif (sidebarOpen) {\n\t\t\t\t\t\tsidebar.classList.remove(\"open\")\n\t\t\t\t\t\tsidebar.classList.add(\"void\")\n\t\t\t\t\t\tgame.classList.remove(\"sidebar-padding\")\n\t\t\t\t\t} else {\n\t\t\t\t\t\tsidebar.classList.remove(\"void\")\n\t\t\t\t\t\tsidebar.classList.add(\"open\")\n\t\t\t\t\t\tgame.classList.add(\"sidebar-padding\")\n\t\t\t\t\t}\n\t\t\t\t\tsidebarOpen = !sidebarOpen\n\t\t\t\t}\n\n\t\t\t\tinit()\n\t\t\t</script></body></html>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func BaseHtmx(head templ.Component, body templ.Component) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div id=\"game\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = body.Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = head.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

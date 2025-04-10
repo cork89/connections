@@ -355,7 +355,7 @@ setupCreate()
 function removeSuggestions() {
     const suggestionContainer = document.getElementById("suggestions") as HTMLElement
     suggestionContainer.innerHTML = "Suggestions:"
-    suggestionContainer.classList.add("hidden")
+    suggestionContainer.classList.add("void")
 }
 
 function generateSuggestions(suggestions: Array<string>) {
@@ -373,7 +373,7 @@ function generateSuggestions(suggestions: Array<string>) {
         if (i < 6) {
             newSuggestion.setAttribute("class", "suggestion uppercase")
         } else {
-            newSuggestion.setAttribute("class", "suggestion uppercase hidden")
+            newSuggestion.setAttribute("class", "suggestion uppercase void")
         }
         if (words.includes(suggestions[i].toUpperCase())) {
             newSuggestion.classList.add("disabled")
@@ -387,7 +387,7 @@ function generateSuggestions(suggestions: Array<string>) {
         suggestionContainer.appendChild(newSuggestion)
     }
 
-    suggestionContainer.classList.remove("hidden")
+    suggestionContainer.classList.remove("void")
 }
 
 async function createSuggestions(category: string, refresh: boolean = false) {

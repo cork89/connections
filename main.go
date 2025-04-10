@@ -33,6 +33,18 @@ const (
 	DuplicateWords  VerifyFailureReason = "Duplicate words found: [%s]"
 )
 
+func homeHtmxHandler(w http.ResponseWriter, r *http.Request) {
+	head := templates.HomeHead()
+	body := templates.HomeBody()
+	component := templates.BaseHtmx(head, body)
+	w.Header().Set("Content-Type", "text/html")
+	err := component.Render(context.Background(), w)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	homeHead := templates.HomeHead()
 	homeBody := templates.HomeBody()
@@ -149,12 +161,18 @@ func main() {
 
 	// router.HandleFunc("GET /headsup/", headsupHandler)
 
-	router.HandleFunc("GET /random/", func(w http.ResponseWriter, r *http.Request) { randomHandler(w, r, realDataAccess) })
+	router.HandleFunc("GET /random/", func(w http.ResponseWriter, r *http.Request) { randomHandler(w, realDataAccess) })
 	router.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/robots.txt")
 	})
 
 	router.HandleFunc("GET /", homeHandler)
+
+	// HTMX exploration
+	// router.HandleFunc("GET /randomHtmx/", func(w http.ResponseWriter, r *http.Request) { randomHtmxHandler(w, r, realDataAccess) })
+	// router.HandleFunc("GET /mygamesHtmx/", mygamesHtmxHandler)
+	// router.HandleFunc("GET /createHtmx/", createHtmxHandler)
+	// router.HandleFunc("GET /homeHtmx/", homeHtmxHandler)
 
 	stack := CreateStack(
 		Logging,

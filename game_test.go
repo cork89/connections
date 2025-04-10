@@ -174,10 +174,9 @@ func TestGameHandler(t *testing.T) {
 }
 
 func TestRandomHandler(t *testing.T) {
-	req := httptest.NewRequest("GET", "/random/", nil)
 	recorder := httptest.NewRecorder()
 
-	randomHandler(recorder, req, TestDataAccess)
+	randomHandler(recorder, TestDataAccess)
 
 	if recorder.Code != http.StatusFound {
 		t.Errorf("Expected status code: %d, got: %d", http.StatusFound,

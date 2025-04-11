@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"com.github.cork89/connections/models"
 	"com.github.cork89/connections/templates"
 	"github.com/google/generative-ai-go/genai"
 	"github.com/joho/godotenv"
@@ -35,7 +36,7 @@ const (
 
 func homeHtmxHandler(w http.ResponseWriter, r *http.Request) {
 	head := templates.HomeHead()
-	body := templates.HomeBody()
+	body := templates.HomeBody(models.Desktop)
 	component := templates.BaseHtmx(head, body)
 	w.Header().Set("Content-Type", "text/html")
 	err := component.Render(context.Background(), w)
@@ -45,9 +46,19 @@ func homeHtmxHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func determineUserAgentType(ua string) models.UserAgentType {
+	if strings.Contains(strings.ToLower(ua), "mobile") {
+		return models.Mobile
+	} else {
+		return models.Desktop
+	}
+}
+
 func homeHandler(w http.ResponseWriter, r *http.Request) {
+	userAgentType := determineUserAgentType(r.UserAgent())
+
 	homeHead := templates.HomeHead()
-	homeBody := templates.HomeBody()
+	homeBody := templates.HomeBody(userAgentType)
 	component := templates.Base(homeHead, homeBody)
 
 	err := component.Render(context.Background(), w)
@@ -178,6 +189,7 @@ func main() {
 		Logging,
 		Session,
 		StaticCompression,
+		CacheControl,
 	)
 
 	server := http.Server{

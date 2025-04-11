@@ -124,6 +124,7 @@ img:hover {
     flex: 1;
     font-family: 'nyt-franklin';
     font-size: small;
+    font-weight: bold;
 }
 
 .left-label {

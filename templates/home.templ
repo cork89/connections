@@ -1,21 +1,28 @@
 package templates
 
+import "com.github.cork89/connections/models"
+
 templ HomeHead() {
+	<title>Connections | hearteyesemoji</title>
 	<link id="pagecss" rel="stylesheet" href="/static/home.css"/>
 }
 
-templ HomeBody() {
+templ HomeBody(userAgentType models.UserAgentType) {
 	<div class="homebody">
 		<div class="homecopy">
 			<h1>Make your own connections game!</h1>
 		</div>
 		<div class="homehero">
-			<img src="/static/connecthero.webp" alt="Connections game demo screenshot"/>
+			if userAgentType == models.Mobile {
+				<img src="/static/connecthero-sm.webp" alt="Connections game demo screenshot" width="400px"/>
+			} else {
+				<img src="/static/connecthero.webp" alt="Connections game demo screenshot" width="600px"/>
+			}
 		</div>
 		<div class="buttons">
-			<a href="/create/"><button style="margin-right: 1em;">Create</button></a>
+			<a href="/create/"><button>Create</button></a>
 			<a href="/mygames/"><button>My Games</button></a>
-			<a href="/random/"><button style="margin-left: 1em;">Play Random Game</button></a>
+			<a href="/random/"><button>Play Random Game</button></a>
 		</div>
 	</div>
 }

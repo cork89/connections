@@ -39,12 +39,12 @@ p {
 }
 
 .homehero img {
-    width: 600px;
     max-width: 90%;
 }
 
 .buttons {
     margin-top: 3em;
+    gap: 25px;
 }
 
 .buttons a {

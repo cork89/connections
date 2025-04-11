@@ -8,6 +8,8 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "com.github.cork89/connections/models"
+
 func HomeHead() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -29,7 +31,7 @@ func HomeHead() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<link id=\"pagecss\" rel=\"stylesheet\" href=\"/static/home.css\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<title>Connections | hearteyesemoji</title><link id=\"pagecss\" rel=\"stylesheet\" href=\"/static/home.css\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -37,7 +39,7 @@ func HomeHead() templ.Component {
 	})
 }
 
-func HomeBody() templ.Component {
+func HomeBody(userAgentType models.UserAgentType) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -58,7 +60,22 @@ func HomeBody() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"homebody\"><div class=\"homecopy\"><h1>Make your own connections game!</h1></div><div class=\"homehero\"><img src=\"/static/connecthero.webp\" alt=\"Connections game demo screenshot\"></div><div class=\"buttons\"><a href=\"/create/\"><button style=\"margin-right: 1em;\">Create</button></a> <a href=\"/mygames/\"><button>My Games</button></a> <a href=\"/random/\"><button style=\"margin-left: 1em;\">Play Random Game</button></a></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"homebody\"><div class=\"homecopy\"><h1>Make your own connections game!</h1></div><div class=\"homehero\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if userAgentType == models.Mobile {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<img src=\"/static/connecthero-sm.webp\" alt=\"Connections game demo screenshot\" width=\"400px\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<img src=\"/static/connecthero.webp\" alt=\"Connections game demo screenshot\" width=\"600px\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"buttons\"><a href=\"/create/\"><button>Create</button></a> <a href=\"/mygames/\"><button>My Games</button></a> <a href=\"/random/\"><button>Play Random Game</button></a></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

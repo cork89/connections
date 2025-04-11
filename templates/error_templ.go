@@ -29,6 +29,10 @@ func EmptyHead() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<title>Error | hearteyesemoji</title>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		return nil
 	})
 }
@@ -54,7 +58,7 @@ func Body404() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div style=\"display: flex;flex-direction: column; font-family:&#39;nyt-franklin&#39;;\"><span style=\"text-align: center;font-size: 200px;margin-top: 1em;\">404</span> <span style=\"text-align: center;\">Aint nobody finding that</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div style=\"display: flex;flex-direction: column; font-family:&#39;nyt-franklin&#39;;\"><span style=\"text-align: center;font-size: 200px;margin-top: 1em;\">404</span> <span style=\"text-align: center;\">Aint nobody finding that</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

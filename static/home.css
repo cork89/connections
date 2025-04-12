@@ -51,10 +51,18 @@ p {
     text-decoration: inherit;
     color: inherit;
     cursor: pointer;
+    display: flex;
+    text-decoration: none;
 }
 
 .buttons a:visited {
     text-decoration: inherit;
     color: inherit;
     cursor: pointer;
+}
+
+@media (max-width:600px) {
+    .buttons a {
+        flex: 1;
+    }
 }

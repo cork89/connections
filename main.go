@@ -8,7 +8,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	"com.github.cork89/connections/models"
 	"com.github.cork89/connections/templates"
@@ -175,6 +177,64 @@ func main() {
 	router.HandleFunc("GET /random/", func(w http.ResponseWriter, r *http.Request) { randomHandler(w, realDataAccess) })
 	router.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/robots.txt")
+	})
+
+	router.HandleFunc("GET /settings/", func(w http.ResponseWriter, r *http.Request) {
+
+		cookie, err := r.Cookie(models.SettingsCookie)
+		bitPackedSettings := models.BitPackedSettings{Lang: models.English, Suggestions: true}
+		if err == nil {
+			val, err := strconv.Atoi(cookie.Value)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			bitPackedSettings.FromBitPacked(val)
+		}
+
+		settingsHead := templates.SettingsHead()
+		settingsBody := templates.SettingsBody(bitPackedSettings)
+		component := templates.Base(settingsHead, settingsBody)
+
+		err = component.Render(context.Background(), w)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	})
+
+	router.HandleFunc("POST /settings/", func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		lang := r.FormValue("lang")
+		suggestions := r.FormValue("suggestions")
+
+		bitPackedSettings := models.BitPackedSettings{Suggestions: suggestions == "on"}
+		if lang == "fr" {
+			bitPackedSettings.Lang = models.French
+		} else if lang == "es" {
+			bitPackedSettings.Lang = models.Spanish
+		}
+
+		cookie := http.Cookie{
+			Name:     models.SettingsCookie,
+			Value:    strconv.Itoa(bitPackedSettings.ToBitPacked()),
+			Path:     "/",
+			MaxAge:   int(time.Duration(2160 * time.Hour).Seconds()),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteLaxMode,
+		}
+
+		http.SetCookie(w, &cookie)
+		http.Redirect(w, r, "/settings/", http.StatusFound)
 	})
 
 	router.HandleFunc("GET /", homeHandler)

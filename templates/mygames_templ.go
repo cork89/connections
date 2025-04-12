@@ -34,7 +34,7 @@ func MyGamesHead() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<link id=\"pagecss\" rel=\"stylesheet\" href=\"/static/mygames.css\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<title>My Games | hearteyesemoji.dev</title><link id=\"pagecss\" rel=\"stylesheet\" href=\"/static/mygames.css\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -112,7 +112,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Yellow)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 37, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 38, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -125,7 +125,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Green)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 38, Col: 40}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 39, Col: 40}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Blue)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 39, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 40, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -151,7 +151,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Purple)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 40, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 41, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -164,7 +164,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(game.CreatedDtTm)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 42, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 43, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -186,7 +186,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(game.ShortLink)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 43, Col: 87}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 44, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -231,7 +231,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Yellow)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 52, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 53, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -244,7 +244,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Green)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 53, Col: 40}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 54, Col: 40}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -257,7 +257,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Blue)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 54, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 55, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -270,7 +270,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(game.Categories.Purple)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 55, Col: 41}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 56, Col: 41}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -283,7 +283,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(game.CreatedDtTm)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 57, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 58, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
@@ -305,7 +305,7 @@ func MyGamesBody(myGamesData models.MyGamesData, myRecentGames models.MyGamesDat
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(game.ShortLink)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 58, Col: 87}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/mygames.templ`, Line: 59, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {

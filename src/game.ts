@@ -341,7 +341,8 @@ enum HintStage {
     REVEALED_VIS = "revealedvis",
 }
 
-var hintsStage: HintStage = HintStage.NOT_REVEALED_INVIS
+const revealHint: HTMLElement = document.getElementById("reveal-hint") as HTMLElement
+var hintsStage: HintStage = (revealHint.innerText === "Hints:") ? HintStage.REVEALED_INVIS : HintStage.NOT_REVEALED_INVIS
 var hintInterval: number = 0
 var hintTimer: number = 5
 

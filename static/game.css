@@ -213,6 +213,8 @@
     border-radius: var(--border-radius);
     min-width: 170px;
     min-height: 126px;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 @keyframes hide-first {

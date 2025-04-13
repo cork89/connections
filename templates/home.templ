@@ -7,10 +7,10 @@ templ HomeHead() {
 	<link id="pagecss" rel="stylesheet" href="/static/home.css"/>
 }
 
-templ HomeBody(userAgentType models.UserAgentType) {
+templ HomeBody(userAgentType models.UserAgentType, i18n models.I18N) {
 	<div class="homebody">
 		<div class="homecopy">
-			<h1>Make your own connections game!</h1>
+			<h1>{ i18n.HeroTag }</h1>
 		</div>
 		<div class="homehero">
 			if userAgentType == models.Mobile {
@@ -20,9 +20,9 @@ templ HomeBody(userAgentType models.UserAgentType) {
 			}
 		</div>
 		<div class="buttons">
-			<a href="/create/"><button>Create</button></a>
-			<a href="/mygames/"><button>My Games</button></a>
-			<a href="/random/"><button>Play Random Game</button></a>
+			<a href="/create/"><button>{ i18n.Create }</button></a>
+			<a href="/mygames/"><button>{ i18n.MyGames }</button></a>
+			<a href="/random/"><button>{ i18n.PlayRandom }</button></a>
 		</div>
 	</div>
 }

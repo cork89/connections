@@ -24,7 +24,6 @@ var validGameId = regexp.MustCompile("^[-_a-zA-Z0-9]{3,36}$")
 
 func ExtractGameId(r *http.Request) (string, error) {
 	m := validGameId.FindStringSubmatch(r.PathValue("gameId"))
-	fmt.Println(m, r.PathValue("gameId"))
 	if len(m) != 1 {
 		return "", errors.New("invalid game id")
 	}
@@ -238,6 +237,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 // Retrieve the game board for a user session and game id
 func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) (*models.SelectedResponse, error) {
 	gameId, err := ExtractGameId(r)
+	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -248,7 +248,7 @@ func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAcce
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 
-		component := templates.Base(templates.EmptyHead(), templates.Body404())
+		component := templates.Base(templates.EmptyHead(), templates.Body404(), i18n)
 
 		err = component.Render(context.Background(), w)
 
@@ -293,11 +293,12 @@ func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) 
 	if err != nil {
 		return
 	}
+	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
 
 	gameHead := templates.GameHead()
 	gameBoard := templates.GameBoard(*gameResponse)
 	gameBody := templates.GameBody(gameBoard, gameResponse.Debug)
-	component := templates.Base(gameHead, gameBody)
+	component := templates.Base(gameHead, gameBody, i18n)
 
 	err = component.Render(context.Background(), w)
 
@@ -322,6 +323,7 @@ func randomHandler(w http.ResponseWriter, dataaccess DataAccess) {
 
 	log.Printf("randomHandler: Redirecting to: %s", redirectURL)
 
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	w.Header().Set("Location", redirectURL)
 	w.WriteHeader(http.StatusFound)
 	log.Println("redirect issued")

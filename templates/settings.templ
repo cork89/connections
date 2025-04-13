@@ -7,28 +7,30 @@ templ SettingsHead() {
 	<link id="pagecss" rel="stylesheet" href="/static/settings.css"/>
 }
 
-templ SettingsBody(settings models.BitPackedSettings) {
+templ SettingsBody(settings models.BitPackedSettings, i18n models.I18N) {
 	<div class="settings">
-		<h2>Settings (doesn't work yet ⚠️)</h2>
+		<h2>{ i18n.Settings }</h2>
 		<form method="POST">
+			// <div class="form-group">
+			// 	<label for="lang">{ i18n.Language }:</label>
+			// 	<select id="lang" name="lang">
+			// 		if settings.Lang == models.French {
+			// 			<option value="en">English</option>
+			// 			<option value="fr" selected>Français</option>
+			// 			<option value="es">Español</option>
+			// 		} else if settings.Lang == models.Spanish {
+			// 			<option value="en">English</option>
+			// 			<option value="fr">Français</option>
+			// 			<option value="es" selected>Español</option>
+			// 		} else {
+			// 			<option value="en" selected>English</option>
+			// 			<option value="fr">Français</option>
+			// 			<option value="es">Español</option>
+			// 		}
+			// 	</select>
+			// </div>
 			<div class="form-group">
-				<label for="lang">Language:</label>
-				<select id="lang" name="lang">
-					<option value="en">English</option>
-					if settings.Lang == models.French {
-						<option value="fr" selected>Français</option>
-						<option value="es">Español</option>
-					} else if settings.Lang == models.Spanish {
-						<option value="fr">Français</option>
-						<option value="es" selected>Español</option>
-					} else {
-						<option value="fr">Français</option>
-						<option value="es">Español</option>
-					}
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="suggestions">Create Suggestions:</label>
+				<label for="suggestions">{ i18n.CreateSuggestions }:</label>
 				if settings.Suggestions == true {
 					<input id="suggestions" name="suggestions" type="checkbox" checked/>
 				} else {
@@ -36,7 +38,7 @@ templ SettingsBody(settings models.BitPackedSettings) {
 				}
 			</div>
 			<div class="buttons">
-				<button type="submit">Save Changes</button>
+				<button type="submit">{ i18n.SaveChanges }</button>
 			</div>
 		</form>
 	</div>

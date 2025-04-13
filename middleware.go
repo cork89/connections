@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
+	"com.github.cork89/connections/models"
 	brotli "github.com/andybalholm/brotli"
 	uuid "github.com/google/uuid"
 )
@@ -101,6 +103,37 @@ func Session(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), SessionCtx, cookie.Value)
 		r = r.Clone(ctx)
 
+		next.ServeHTTP(w, r)
+	})
+}
+
+func Settings(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie(models.SettingsCookie)
+		bitPackedSettings := models.BitPackedSettings{Lang: models.English, Suggestions: true}
+		if err == nil {
+			val, err := strconv.Atoi(cookie.Value)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				next.ServeHTTP(w, r)
+				return
+			}
+			bitPackedSettings.FromBitPacked(val)
+		}
+
+		var i18n models.I18N
+		if bitPackedSettings.Lang == models.Spanish {
+			i18n = *i18n.Spanish()
+		} else if bitPackedSettings.Lang == models.French {
+			i18n = *i18n.French()
+		} else {
+			i18n = *i18n.English()
+		}
+
+		ctx := context.WithValue(r.Context(), models.Settingsctx, bitPackedSettings)
+		ctx = context.WithValue(ctx, models.I18Nctx, i18n)
+		r = r.Clone(ctx)
 		next.ServeHTTP(w, r)
 	})
 }

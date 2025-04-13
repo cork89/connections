@@ -152,6 +152,7 @@ var saveCategoriesButton: HTMLButtonElement
 var submitButton: HTMLButtonElement
 var createdGames: Array<any>
 var ctx: Context
+var suggestionsFlag: boolean
 
 var currentWords: Array<HTMLDivElement> = []
 var currentCategory: Array<HTMLDivElement> = []
@@ -164,6 +165,7 @@ function setupCreate() {
     wordsInput = document.getElementById("word-input") as HTMLInputElement ?? (() => { throw new Error("wordsInput cannot be null") })()
     saveCategoriesButton = document.getElementById("save-categories-button") as HTMLButtonElement ?? (() => { throw new Error("saveCategoriesButton cannot be null") })()
     submitButton = document.getElementById("submit") as HTMLButtonElement ?? (() => { throw new Error("submitButton cannot be null") })()
+    suggestionsFlag = document.getElementById("suggestionsSettings")?.textContent?.trim() === "true"
 
     let ctxStorage = localStorage.getItem("ctx")
 
@@ -228,7 +230,9 @@ function setupCreate() {
             const input = that.value.trim();
             if (input && currentCategory.length < 1) {
                 createCategory(input, that, true);
-                createSuggestions(input, true);
+                if (suggestionsFlag) {
+                    createSuggestions(input, true);
+                }
                 that.value = "";
             }
         } else if (event.key === "Backspace" || event.key === "Delete") {
@@ -473,7 +477,7 @@ function editColor(color: HTMLElement) {
         saveCategoriesButton.disabled = false
         populateCategoriesAndWords()
 
-        if (ctx.state !== States.NONE) {
+        if (ctx.state !== States.NONE && suggestionsFlag) {
             generateSuggestions(ctx.categories[ctx.state].suggestions)
         }
         if (currentCategory.length > 0) {
@@ -765,7 +769,7 @@ function removeWord(element: HTMLElement, findWord: boolean = true, shouldSave: 
     if (shouldSave) {
         saveCurrentCategoriesSilently(ctx.state)
     }
-    if (ctx.state !== States.NONE) {
+    if (ctx.state !== States.NONE && suggestionsFlag) {
         removeSuggestions()
         generateSuggestions(ctx.categories[ctx.state].suggestions)
     }

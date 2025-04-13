@@ -36,6 +36,7 @@ func mygamesHtmxHandler(w http.ResponseWriter, r *http.Request) {
 
 func mygamesHandler(w http.ResponseWriter, r *http.Request) {
 	session := r.Context().Value(SessionCtx).(string)
+	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
 
 	queryVals := r.URL.Query()
 
@@ -63,7 +64,7 @@ func mygamesHandler(w http.ResponseWriter, r *http.Request) {
 
 	myGamesHead := templates.MyGamesHead()
 	myGamesBody := templates.MyGamesBody(myGamesData, myRecentGames, display)
-	component := templates.Base(myGamesHead, myGamesBody)
+	component := templates.Base(myGamesHead, myGamesBody, i18n)
 
 	err = component.Render(context.Background(), w)
 

@@ -245,10 +245,12 @@ func createHtmxHandler(w http.ResponseWriter, r *http.Request) {
 	if debugParam == "1" {
 		createData.Debug = true
 	}
+	bitPackedSettings := r.Context().Value(models.Settingsctx).(models.BitPackedSettings)
+
 	w.Header().Set("Content-Type", "text/html")
 
 	head := templates.CreateHead()
-	body := templates.CreateBody(createData.Debug)
+	body := templates.CreateBody(createData.Debug, bitPackedSettings)
 	component := templates.BaseHtmx(head, body)
 	err := component.Render(context.Background(), w)
 
@@ -259,15 +261,17 @@ func createHtmxHandler(w http.ResponseWriter, r *http.Request) {
 
 func createHandler(w http.ResponseWriter, r *http.Request) {
 	var createData CreateData
+	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
 
 	debugParam := r.FormValue("debug")
 	if debugParam == "1" {
 		createData.Debug = true
 	}
+	bitPackedSettings := r.Context().Value(models.Settingsctx).(models.BitPackedSettings)
 
 	createHead := templates.CreateHead()
-	createBody := templates.CreateBody(createData.Debug)
-	component := templates.Base(createHead, createBody)
+	createBody := templates.CreateBody(createData.Debug, bitPackedSettings)
+	component := templates.Base(createHead, createBody, i18n)
 
 	err := component.Render(context.Background(), w)
 

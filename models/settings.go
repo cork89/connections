@@ -6,10 +6,10 @@ const (
 	English        Language = "en"
 	Spanish        Language = "es"
 	French         Language = "fr"
-	SUGG           int      = 0x1
-	EN             int      = 0x10
-	ES             int      = 0x100
-	FR             int      = 0x1000
+	SUGG           int      = 0b1
+	EN             int      = 0b10
+	ES             int      = 0b100
+	FR             int      = 0b1000
 	SettingsCookie string   = "ConnectionsSettings"
 )
 
@@ -54,5 +54,7 @@ func (s *BitPackedSettings) FromBitPacked(bitPacked int) {
 	}
 	if bitPacked&SUGG == SUGG {
 		s.Suggestions = true
+	} else {
+		s.Suggestions = false
 	}
 }

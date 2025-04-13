@@ -8,9 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
-	"time"
 
 	"com.github.cork89/connections/models"
 	"com.github.cork89/connections/templates"
@@ -38,7 +36,7 @@ const (
 
 func homeHtmxHandler(w http.ResponseWriter, r *http.Request) {
 	head := templates.HomeHead()
-	body := templates.HomeBody(models.Desktop)
+	body := templates.HomeBody(models.Desktop, models.I18N{})
 	component := templates.BaseHtmx(head, body)
 	w.Header().Set("Content-Type", "text/html")
 	err := component.Render(context.Background(), w)
@@ -58,10 +56,11 @@ func determineUserAgentType(ua string) models.UserAgentType {
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	userAgentType := determineUserAgentType(r.UserAgent())
+	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
 
 	homeHead := templates.HomeHead()
-	homeBody := templates.HomeBody(userAgentType)
-	component := templates.Base(homeHead, homeBody)
+	homeBody := templates.HomeBody(userAgentType, i18n)
+	component := templates.Base(homeHead, homeBody, i18n)
 
 	err := component.Render(context.Background(), w)
 
@@ -179,63 +178,8 @@ func main() {
 		http.ServeFile(w, r, "static/robots.txt")
 	})
 
-	router.HandleFunc("GET /settings/", func(w http.ResponseWriter, r *http.Request) {
-
-		cookie, err := r.Cookie(models.SettingsCookie)
-		bitPackedSettings := models.BitPackedSettings{Lang: models.English, Suggestions: true}
-		if err == nil {
-			val, err := strconv.Atoi(cookie.Value)
-
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			bitPackedSettings.FromBitPacked(val)
-		}
-
-		settingsHead := templates.SettingsHead()
-		settingsBody := templates.SettingsBody(bitPackedSettings)
-		component := templates.Base(settingsHead, settingsBody)
-
-		err = component.Render(context.Background(), w)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-
-	router.HandleFunc("POST /settings/", func(w http.ResponseWriter, r *http.Request) {
-		err := r.ParseForm()
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		lang := r.FormValue("lang")
-		suggestions := r.FormValue("suggestions")
-
-		bitPackedSettings := models.BitPackedSettings{Suggestions: suggestions == "on"}
-		if lang == "fr" {
-			bitPackedSettings.Lang = models.French
-		} else if lang == "es" {
-			bitPackedSettings.Lang = models.Spanish
-		}
-
-		cookie := http.Cookie{
-			Name:     models.SettingsCookie,
-			Value:    strconv.Itoa(bitPackedSettings.ToBitPacked()),
-			Path:     "/",
-			MaxAge:   int(time.Duration(2160 * time.Hour).Seconds()),
-			HttpOnly: true,
-			Secure:   true,
-			SameSite: http.SameSiteLaxMode,
-		}
-
-		http.SetCookie(w, &cookie)
-		http.Redirect(w, r, "/settings/", http.StatusFound)
-	})
+	router.HandleFunc("GET /settings/", settingsHandler)
+	router.HandleFunc("POST /settings/", settingsPostHandler)
 
 	router.HandleFunc("GET /", homeHandler)
 
@@ -249,7 +193,8 @@ func main() {
 		Logging,
 		Session,
 		StaticCompression,
-		CacheControl,
+		// CacheControl,
+		Settings,
 	)
 
 	server := http.Server{

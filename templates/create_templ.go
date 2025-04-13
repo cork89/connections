@@ -8,6 +8,8 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "com.github.cork89/connections/models"
+
 func CreateHead() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -37,7 +39,7 @@ func CreateHead() templ.Component {
 	})
 }
 
-func CreateBody(debug bool) templ.Component {
+func CreateBody(debug bool, settings models.BitPackedSettings) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -68,7 +70,15 @@ func CreateBody(debug bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button id=\"save-categories-button\" disabled>Save</button></div><div class=\"suggestions void\" id=\"suggestions\">Suggestions:</div></fieldset><div class=\"submit-warning\" style=\"visibility: hidden;\"><img width=\"24px\" height=\"24px\" src=\"/static/info.svg\"> <span id=\"warning-message\"></span> <span class=\"submit-warning-close\" id=\"submit-warning-close\">x</span></div><div class=\"buttons\"><button id=\"submit\" disabled>Submit</button></div><script src=\"/static/create.js\" type=\"module\"></script></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button id=\"save-categories-button\" disabled>Save</button></div><div class=\"suggestions void\" id=\"suggestions\">Suggestions:</div></fieldset><div class=\"submit-warning\" style=\"visibility: hidden;\"><img width=\"24px\" height=\"24px\" src=\"/static/info.svg\"> <span id=\"warning-message\"></span> <span class=\"submit-warning-close\" id=\"submit-warning-close\">x</span></div><div class=\"buttons\"><button id=\"submit\" disabled>Submit</button></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.JSONScript("suggestionsSettings", settings.Suggestions).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<script src=\"/static/create.js\" type=\"module\"></script></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,11 +1,13 @@
 package templates
 
+import "com.github.cork89/connections/models"
+
 templ CreateHead() {
 	<title>Create | hearteyesemoji.dev</title>
 	<link id="pagecss" rel="stylesheet" href="/static/create.css"/>
 }
 
-templ CreateBody(debug bool) {
+templ CreateBody(debug bool, settings models.BitPackedSettings) {
 	<div id="cat">
 		<div class="colors">
 			<div class="colors-item yellow">
@@ -95,6 +97,7 @@ templ CreateBody(debug bool) {
 		<div class="buttons">
 			<button id="submit" disabled>Submit</button>
 		</div>
+		@templ.JSONScript("suggestionsSettings", settings.Suggestions)
 		<script src="/static/create.js" type="module"></script>
 	</div>
 }

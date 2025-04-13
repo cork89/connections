@@ -53,6 +53,19 @@ form {
     color: var(--color-text);
 }
 
+.settings-label {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.settings-label span {
+    font-size: small;
+    color: var(--color-footer);
+    margin-left: 10px;
+}
+
 select {
     padding: 10px 14px;
     border: 1px solid var(--color-secondary);

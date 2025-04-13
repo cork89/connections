@@ -10,6 +10,7 @@ const (
 	EN             int      = 0b10
 	ES             int      = 0b100
 	FR             int      = 0b1000
+	HINTS          int      = 0b10000
 	SettingsCookie string   = "ConnectionsSettings"
 )
 
@@ -28,6 +29,7 @@ var langByBits = map[int]Language{
 type BitPackedSettings struct {
 	Lang        Language
 	Suggestions bool
+	UnhideHints bool
 }
 
 func (s BitPackedSettings) ToBitPacked() int {
@@ -35,6 +37,9 @@ func (s BitPackedSettings) ToBitPacked() int {
 	finalSettings |= bitsByLang[s.Lang]
 	if s.Suggestions {
 		finalSettings |= SUGG
+	}
+	if s.UnhideHints {
+		finalSettings |= HINTS
 	}
 	return finalSettings
 }
@@ -56,5 +61,11 @@ func (s *BitPackedSettings) FromBitPacked(bitPacked int) {
 		s.Suggestions = true
 	} else {
 		s.Suggestions = false
+	}
+
+	if bitPacked&HINTS == HINTS {
+		s.UnhideHints = true
+	} else {
+		s.UnhideHints = false
 	}
 }

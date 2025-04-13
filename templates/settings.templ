@@ -30,11 +30,25 @@ templ SettingsBody(settings models.BitPackedSettings, i18n models.I18N) {
 			// 	</select>
 			// </div>
 			<div class="form-group">
-				<label for="suggestions">{ i18n.CreateSuggestions }:</label>
+				<div class="settings-label">
+					<label for="suggestions">{ i18n.CreateSuggestions }:</label>
+					<span>These suggestions are given when adding words for a category.</span>
+				</div>
 				if settings.Suggestions == true {
 					<input id="suggestions" name="suggestions" type="checkbox" checked/>
 				} else {
 					<input id="suggestions" name="suggestions" type="checkbox"/>
+				}
+			</div>
+			<div class="form-group">
+				<div class="settings-label">
+					<label for="unhide-hints">{ i18n.UnhideHints }:</label>
+					<span>Hints take 5 seconds to display by default.</span>
+				</div>
+				if settings.UnhideHints == true {
+					<input id="unhide-hints" name="unhide-hints" type="checkbox" checked/>
+				} else {
+					<input id="unhide-hints" name="unhide-hints" type="checkbox"/>
 				}
 			</div>
 			<div class="buttons">

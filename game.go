@@ -240,6 +240,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) (*models.SelectedResponse, error) {
 	gameId, err := ExtractGameId(r)
 	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
+	settings := r.Context().Value(models.Settingsctx).(models.BitPackedSettings)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -268,14 +269,22 @@ func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAcce
 	gameState, err := dataaccess.getGamestate(session, id)
 
 	if err != nil {
-		hints := models.Hints{Revealed: false, Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		hints := models.Hints{Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		if settings.UnhideHints {
+			hints.Revealed = true
+		}
+
 		gameState = models.GameState{Words: words, GuessesRemaining: 4, Hints: hints}
 		gameState.Shuffle()
 		go dataaccess.initGamestate(gameState, session, id)
 	}
 
 	if gameState.Hints.Hints == nil {
-		hints := models.Hints{Revealed: false, Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		hints := models.Hints{Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		if settings.UnhideHints {
+			hints.Revealed = true
+		}
+
 		gameState.Hints = hints
 		err = dataaccess.updateGamestate(gameState, session, id)
 

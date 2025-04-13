@@ -37,8 +37,9 @@ func settingsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	lang := r.FormValue("lang")
 	suggestions := r.FormValue("suggestions")
+	unhideHints := r.FormValue("unhide-hints")
 
-	bitPackedSettings := models.BitPackedSettings{Lang: models.English, Suggestions: suggestions == "on"}
+	bitPackedSettings := models.BitPackedSettings{Lang: models.English, Suggestions: suggestions == "on", UnhideHints: unhideHints == "on"}
 	if lang == "fr" {
 		bitPackedSettings.Lang = models.French
 	} else if lang == "es" {

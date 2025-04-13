@@ -27,6 +27,7 @@ type I18N struct {
 	MyGames           string
 	PlayRandom        string
 	HeroTag           string
+	UnhideHints       string
 }
 
 func (s *I18N) English() *I18N {
@@ -39,6 +40,7 @@ func (s *I18N) English() *I18N {
 	s.MyGames = "My Games"
 	s.PlayRandom = "Play Random"
 	s.HeroTag = "Make your own connections game!"
+	s.UnhideHints = "Instantly display hints"
 	return s
 }
 
@@ -52,6 +54,7 @@ func (s *I18N) French() *I18N {
 	s.MyGames = "Mes Jeux"
 	s.PlayRandom = "Jeu Aléatoire"
 	s.HeroTag = "Créez votre propre jeu de connexions!"
+	s.UnhideHints = "Instantly unhide hints"
 	return s
 }
 
@@ -65,5 +68,6 @@ func (s *I18N) Spanish() *I18N {
 	s.MyGames = "Mis juegos"
 	s.PlayRandom = "Jugar al azar"
 	s.HeroTag = "¡Crea tu propio juego de conexiones!"
+	s.UnhideHints = "Instantly unhide hints"
 	return s
 }

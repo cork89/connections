@@ -225,7 +225,7 @@ footer a {
 }
 
 .open {
-    display: flex;
+    display: flex !important;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -38,10 +38,16 @@ type Answer struct {
 	Words string
 }
 
+type Hints struct {
+	Revealed bool
+	Hints    []string
+}
+
 type GameState struct {
 	Answers          []Answer
 	Words            []Word
 	GuessesRemaining int
+	Hints            Hints
 }
 
 func (gs *GameState) AnswerIsNew(category Category) bool {
@@ -135,7 +141,8 @@ func (gs *GameState) Shuffle() *GameState {
 }
 
 type SelectedRequest struct {
-	Selected []Word `json:"selected"`
+	Selected      []Word `json:"selected"`
+	HintsRevealed bool   `json:"hintsRevealed"`
 }
 
 type SelectedResponse struct {

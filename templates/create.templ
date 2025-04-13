@@ -89,9 +89,9 @@ templ CreateBody(debug bool, settings models.BitPackedSettings) {
 			</div>
 			<div class="suggestions void" id="suggestions">Suggestions:</div>
 		</fieldset>
-		<div class="submit-warning" style="visibility: hidden;">
-			<img width="24px" height="24px" src="/static/info.svg"/>
-			<span id="warning-message"></span>
+		<div class="submit-warning" style="visibility: visible;">
+			<img id="infosvg" width="24px" height="24px" src="/static/info.svg"/>
+			<span id="warning-message">The first word of each category will be used as a hint</span>
 			<span class="submit-warning-close" id="submit-warning-close">x</span>
 		</div>
 		<div class="buttons">

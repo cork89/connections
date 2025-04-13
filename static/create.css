@@ -190,12 +190,21 @@ legend {
     display: flex;
     padding: 4px 10px;
     width: 800px;
-    max-width: 90%;
-    margin: 0 auto 5px;
+    max-width: 100%;
+    margin: 10px auto 5px;
+    align-items: center;
+    border-radius: 4px;
 }
 
 #warning-message {
     margin-left: 1em;
+    font-size: small;
+}
+
+@media (prefers-color-scheme: dark) {
+    #infosvg {
+        filter: invert(1);
+    }
 }
 
 .submit-warning-close {

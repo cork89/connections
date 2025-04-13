@@ -182,6 +182,39 @@
     animation: show-second 2s infinite;
 }
 
+.guess-bar {
+    display: flex;
+    align-items: center;
+    width: 800px;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    #hint-icon {
+        filter: invert(0.8);
+    }
+}
+
+.hint-container {
+    position: relative;
+    display: none;
+}
+
+.inner-hint-container {
+    display: flex;
+    border: 1px solid black;
+    position: absolute;
+    left: -180px;
+    top: -150px;
+    flex-direction: column;
+    padding: 10px;
+    background-color: var(--color-background);
+    border-radius: var(--border-radius);
+    min-width: 170px;
+    min-height: 126px;
+}
+
 @keyframes hide-first {
 
     0%,

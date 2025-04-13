@@ -12,7 +12,8 @@ type WordSelection = {
  * The selection request.
  */
 type SelectionRequest = {
-    selected: Array<WordSelection>
+    selected: Array<WordSelection>,
+    hintsRevealed: boolean
 }
 
 const words = document.getElementsByClassName("word")
@@ -29,10 +30,10 @@ const resetButton: HTMLButtonElement | null = document.getElementById("resetButt
 const closeModalButton: HTMLElement | null = document.getElementById("close-modal")
 const closeModalWindow: HTMLElement | null = document.getElementById("gameOverModal")
 
-
 shuffleButton.addEventListener("click", shuffle)
 deselectButton.addEventListener("click", deselectAll)
 checkButton.addEventListener("click", check)
+
 if (resetButton) {
     resetButton.addEventListener("click", reset)
 }
@@ -84,7 +85,7 @@ async function reset() {
  * @returns {SelectionRequest}
  */
 function getSelectionRequest() {
-    const request: SelectionRequest = { selected: [] }
+    const request: SelectionRequest = { selected: [], hintsRevealed: (hintsStage === HintStage.REVEALED_INVIS || hintsStage === HintStage.REVEALED_VIS) ? true : false }
 
     for (const value of currentlySelected) {
         request.selected.push({
@@ -220,7 +221,13 @@ async function deselectAll() {
     try {
         const url = "deselectAll/"
         const response = await fetch(url, {
-            method: "POST"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "hintsRevealed": (hintsStage === HintStage.REVEALED_INVIS || hintsStage === HintStage.REVEALED_VIS) ? true : false
+            })
         })
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`)
@@ -327,6 +334,66 @@ function closeModalEmptySpace(event: PointerEvent) {
     }
 }
 
+enum HintStage {
+    NOT_REVEALED_INVIS = "notrevealedinvis",
+    NOT_REVEALED_VIS = "notrevealedvis",
+    REVEALED_INVIS = "revealedinvis",
+    REVEALED_VIS = "revealedvis",
+}
+
+var hintsStage: HintStage = HintStage.NOT_REVEALED_INVIS
+var hintInterval: number = 0
+var hintTimer: number = 5
+
+// Handler for showing hints, only show hints after a 5 second timeout
+function handleHintPress() {
+    const hintContainer: HTMLElement = document.getElementsByClassName("hint-container")[0] as HTMLElement
+    const revealHint: HTMLElement = document.getElementById("reveal-hint") as HTMLElement
+    const yellowHint: HTMLElement = document.getElementById("yellow-hint") as HTMLElement
+    const greenHint: HTMLElement = document.getElementById("green-hint") as HTMLElement
+    const blueHint: HTMLElement = document.getElementById("blue-hint") as HTMLElement
+    const purpleHint: HTMLElement = document.getElementById("purple-hint") as HTMLElement
+
+
+    if (hintsStage === HintStage.NOT_REVEALED_INVIS) {
+        hintContainer.classList.add("open")
+        hintsStage = HintStage.NOT_REVEALED_VIS
+        hintInterval = setInterval(function () {
+            revealHint.innerText = `Hints revealing in... ${--hintTimer}`
+            if (hintTimer <= 0) {
+                revealHint.innerText = "Hints:";
+                (yellowHint.childNodes[0] as HTMLElement).textContent = "🟡 ";
+                (yellowHint.childNodes[1] as HTMLElement).style = "";
+                (greenHint.childNodes[0] as HTMLElement).textContent = "🟢 ";
+                (greenHint.childNodes[1] as HTMLElement).style = "";
+                (blueHint.childNodes[0] as HTMLElement).textContent = "🔵 ";
+                (blueHint.childNodes[1] as HTMLElement).style = "";
+                (purpleHint.childNodes[0] as HTMLElement).textContent = "🟣 ";
+                (purpleHint.childNodes[1] as HTMLElement).style = "";
+                hintsStage = HintStage.REVEALED_VIS
+                clearInterval(hintInterval)
+            }
+        }, 1000)
+    } else if (hintsStage === HintStage.REVEALED_INVIS) {
+        hintContainer.classList.add("open")
+        hintsStage = HintStage.REVEALED_VIS
+    }
+}
+
+// Handler for hiding hints
+function handleHintRelease() {
+    const hintContainer: HTMLElement = document.getElementsByClassName("hint-container")[0] as HTMLElement
+    // hintContainer.classList.remove("open")
+    if (hintsStage === HintStage.NOT_REVEALED_VIS) {
+        hintContainer.classList.remove("open")
+        clearInterval(hintInterval)
+        hintsStage = HintStage.NOT_REVEALED_INVIS
+    } else if (hintsStage === HintStage.REVEALED_VIS) {
+        hintContainer.classList.remove("open")
+        hintsStage = HintStage.REVEALED_INVIS
+    }
+}
+
 /**
  * Initialize the board by adding a click handler to each word for attempting selection.  Reset the selected words.
  */
@@ -340,6 +407,11 @@ function setupGame() {
     for (let i = 0; i < selected.length; i++) {
         currentlySelected.add(selected[i].id)
     }
+    const hintIcon = document.getElementById("hint-icon") as HTMLElement
+    hintIcon.addEventListener("mousedown", handleHintPress)
+    hintIcon.addEventListener("mouseup", handleHintRelease)
+    hintIcon.addEventListener("touchstart", handleHintPress)
+    hintIcon.addEventListener("touchend", handleHintRelease)
 }
 
 setupGame()

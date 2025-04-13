@@ -70,7 +70,7 @@ func CreateBody(debug bool, settings models.BitPackedSettings) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button id=\"save-categories-button\" disabled>Save</button></div><div class=\"suggestions void\" id=\"suggestions\">Suggestions:</div></fieldset><div class=\"submit-warning\" style=\"visibility: hidden;\"><img width=\"24px\" height=\"24px\" src=\"/static/info.svg\"> <span id=\"warning-message\"></span> <span class=\"submit-warning-close\" id=\"submit-warning-close\">x</span></div><div class=\"buttons\"><button id=\"submit\" disabled>Submit</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<button id=\"save-categories-button\" disabled>Save</button></div><div class=\"suggestions void\" id=\"suggestions\">Suggestions:</div></fieldset><div class=\"submit-warning\" style=\"visibility: visible;\"><img id=\"infosvg\" width=\"24px\" height=\"24px\" src=\"/static/info.svg\"> <span id=\"warning-message\">The first word of each category will be used as a hint</span> <span class=\"submit-warning-close\" id=\"submit-warning-close\">x</span></div><div class=\"buttons\"><button id=\"submit\" disabled>Submit</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

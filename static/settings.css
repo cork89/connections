@@ -6,10 +6,17 @@
     margin: 20px auto;
     padding: 30px;
     width: 600px;
+    max-width: 90%;
     min-height: 400px;
     background-color: var(--color-background);
     box-shadow: var(--box-shadow);
     font-family: 'nyt-franklin';
+}
+
+@media (max-width:1200) {
+    .settings {
+        margin-left: 300px;
+    }
 }
 
 .settings h2 {

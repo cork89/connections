@@ -90,6 +90,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 	}
 
 	categories := gameState.DeselectAll().GetSelectedCategories(check.Selected)
+	gameState.Hints.Revealed = check.HintsRevealed
 
 	var checkResponse = models.SelectedResponse{Result: models.Other}
 	var success bool = false
@@ -127,7 +128,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 
 	go dataaccess.updateGamestate(gameState, session, id)
 
-	gameBoard := templates.GameBoard(checkResponse)
+	gameBoard := templates.GameBoard(checkResponse, checkResponse.GameState.Hints)
 	err = gameBoard.Render(context.Background(), w)
 
 	if err != nil {
@@ -156,12 +157,13 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess
 	}
 
 	gameState.SetSelected(check.Selected).Shuffle()
+	gameState.Hints.Revealed = check.HintsRevealed
 
 	go dataacess.updateGamestate(gameState, session, id)
 
 	checkResponse := models.SelectedResponse{GameState: gameState, Result: models.Other}
 
-	gameBoard := templates.GameBoard(checkResponse)
+	gameBoard := templates.GameBoard(checkResponse, gameState.Hints)
 	err = gameBoard.Render(context.Background(), w)
 
 	if err != nil {
@@ -212,8 +214,8 @@ func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	gameState := models.GameState{Words: words, GuessesRemaining: 4}
+	hints := models.Hints{Revealed: false, Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+	gameState := models.GameState{Words: words, GuessesRemaining: 4, Hints: hints}
 	gameState.Shuffle()
 	err = dataaccess.initGamestate(gameState, session, id)
 
@@ -225,7 +227,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 
 	checkResponse := models.SelectedResponse{GameState: gameState, Result: models.Other}
 
-	gameBoard := templates.GameBoard(checkResponse)
+	gameBoard := templates.GameBoard(checkResponse, hints)
 	err = gameBoard.Render(context.Background(), w)
 
 	if err != nil {
@@ -266,9 +268,21 @@ func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAcce
 	gameState, err := dataaccess.getGamestate(session, id)
 
 	if err != nil {
-		gameState = models.GameState{Words: words, GuessesRemaining: 4}
+		hints := models.Hints{Revealed: false, Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		gameState = models.GameState{Words: words, GuessesRemaining: 4, Hints: hints}
 		gameState.Shuffle()
 		go dataaccess.initGamestate(gameState, session, id)
+	}
+
+	if gameState.Hints.Hints == nil {
+		hints := models.Hints{Revealed: false, Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		gameState.Hints = hints
+		err = dataaccess.updateGamestate(gameState, session, id)
+
+		if err != nil {
+			log.Println("failed to update gamestate, err: ", err)
+			return nil, err
+		}
 	}
 
 	gameResponse := models.SelectedResponse{GameState: gameState}
@@ -296,7 +310,7 @@ func gameHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess) 
 	i18n := r.Context().Value(models.I18Nctx).(models.I18N)
 
 	gameHead := templates.GameHead()
-	gameBoard := templates.GameBoard(*gameResponse)
+	gameBoard := templates.GameBoard(*gameResponse, gameResponse.GameState.Hints)
 	gameBody := templates.GameBody(gameBoard, gameResponse.Debug)
 	component := templates.Base(gameHead, gameBody, i18n)
 
@@ -352,7 +366,7 @@ func randomHtmxHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAc
 	w.Header().Set("Content-Type", "text/html")
 
 	gameHead := templates.GameHead()
-	gameBoard := templates.GameBoard(*gameResponse)
+	gameBoard := templates.GameBoard(*gameResponse, gameResponse.GameState.Hints)
 	gameBody := templates.GameBody(gameBoard, gameResponse.Debug)
 	component := templates.BaseHtmx(gameHead, gameBody)
 

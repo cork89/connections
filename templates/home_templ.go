@@ -31,7 +31,7 @@ func HomeHead() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<title>Connections | hearteyesemoji.dev</title><link id=\"pagecss\" rel=\"stylesheet\" href=\"/static/home.css\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<title>Custom Connections Puzzle Maker | hearteyesemoji.dev</title><link id=\"pagecss\" rel=\"stylesheet\" href=\"/static/home.css\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -35,9 +35,9 @@ templ SettingsBody(settings models.BitPackedSettings, i18n models.I18N) {
 					<span>These suggestions are given when adding words for a category.</span>
 				</div>
 				if settings.Suggestions == true {
-					<input id="suggestions" name="suggestions" type="checkbox" checked/>
+					<input id="suggestions" name="suggestions" type="checkbox" onchange="enableSave()" checked/>
 				} else {
-					<input id="suggestions" name="suggestions" type="checkbox"/>
+					<input id="suggestions" name="suggestions" type="checkbox" onchange="enableSave()"/>
 				}
 			</div>
 			<div class="form-group">
@@ -46,14 +46,21 @@ templ SettingsBody(settings models.BitPackedSettings, i18n models.I18N) {
 					<span>Hints take 5 seconds to display by default.</span>
 				</div>
 				if settings.UnhideHints == true {
-					<input id="unhide-hints" name="unhide-hints" type="checkbox" checked/>
+					<input id="unhide-hints" name="unhide-hints" type="checkbox" onchange="enableSave()" checked/>
 				} else {
-					<input id="unhide-hints" name="unhide-hints" type="checkbox"/>
+					<input id="unhide-hints" name="unhide-hints" type="checkbox" onchange="enableSave()"/>
 				}
 			</div>
 			<div class="buttons">
-				<button type="submit">{ i18n.SaveChanges }</button>
+				<button id="save-changes-btn" type="submit" disabled>{ i18n.SaveChanges }</button>
 			</div>
 		</form>
 	</div>
+	<script>
+		const saveChangesBtn = document.getElementById("save-changes-btn")
+
+		function enableSave() {
+			saveChangesBtn.disabled = false
+		}
+	</script>
 }

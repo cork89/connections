@@ -301,6 +301,14 @@ func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAcce
 	gameOverData.DetermineGameOver(gameState)
 	gameResponse.GameOverData = gameOverData
 
+	if gameOverData.IsGameOver {
+		categories := gameResponse.GameState.GetSelectedCategories(words)
+		for k := range categories {
+			gameResponse.GameState.SetAnswers(k)
+		}
+		gameResponse.GameState.DeselectAll()
+	}
+
 	debugParam := r.FormValue("debug")
 	if debugParam == "1" {
 		gameResponse.Debug = true

@@ -181,7 +181,7 @@ func main() {
 	router.HandleFunc("GET /settings/", settingsHandler)
 	router.HandleFunc("POST /settings/", settingsPostHandler)
 
-	router.HandleFunc("GET /", homeHandler)
+	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) { randomHandler(w, realDataAccess) })
 
 	// HTMX exploration
 	// router.HandleFunc("GET /randomHtmx/", func(w http.ResponseWriter, r *http.Request) { randomHtmxHandler(w, r, realDataAccess) })

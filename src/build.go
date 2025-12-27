@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/evanw/esbuild/pkg/api"
@@ -20,6 +21,7 @@ func main() {
 	})
 
 	if len(result.Errors) > 0 {
+		fmt.Println(result.Errors)
 		os.Exit(1)
 	}
 }

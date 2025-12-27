@@ -14,7 +14,7 @@ import (
 
 	"com.github.cork89/connections/models"
 	"com.github.cork89/connections/templates"
-	"github.com/google/generative-ai-go/genai"
+	"github.com/revrost/go-openrouter"
 )
 
 type CreateData struct {
@@ -281,6 +281,8 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+const instructions = "Instructions\n```\nYou are a direct assistant. Answer concisely and do not provide any internal reasoning or step-by-step thinking.\nRespond with a list of words\nThe words should be comma separated\nThe words should be related to the topic provided\nDo not respond with anything but the words\nRespond with only ascii characters\n```"
+
 func suggestionsHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
@@ -293,39 +295,34 @@ func suggestionsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := model.GenerateContent(context.Background(), genai.Text(string(bytes)))
+	resp, err := model.CreateChatCompletion(context.Background(), openrouter.ChatCompletionRequest{
+		Model:       "openai/gpt-oss-120b",
+		Temperature: 0.9,
+		MaxTokens:   1000,
+		Messages: []openrouter.ChatCompletionMessage{
+			openrouter.SystemMessage(instructions),
+			openrouter.UserMessage(string(bytes)),
+		},
+	})
+
 	if err != nil {
 		log.Printf("failed to generate content: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if len(resp.Candidates) < 1 || len(resp.Candidates[0].Content.Parts) < 1 {
+	if len(resp.Choices) < 1 || len(resp.Choices[0].Message.Content.Text) < 1 {
 		log.Println("no content parts in response")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	part := resp.Candidates[0].Content.Parts[0]
-
-	textPart, ok := part.(genai.Text)
-	if !ok {
-		log.Println("unexpected part type: not text")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	suggestion := string(textPart)
+	suggestion := resp.Choices[0].Message.Content.Text
 	suggestions := strings.Split(suggestion, ",")
 
 	for i := range suggestions {
 		suggestions[i] = strings.TrimSpace(suggestions[i])
 	}
-
-	fmt.Println(suggestions)
-	// component := templates.CreateSuggestions(suggestions[0:4])
-
-	// err = component.Render(context.Background(), w)
 
 	jsonData, err := json.Marshal(suggestions)
 
@@ -337,9 +334,4 @@ func suggestionsHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	w.Write(jsonData)
-
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// }
-	// w.Header().Set("Content-Type", "text/html")
 }

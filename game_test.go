@@ -8,7 +8,20 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"com.github.cork89/connections/models"
 )
+
+func withGameContext(req *http.Request) *http.Request {
+	i18n := models.I18N{}
+	i18n.English()
+
+	ctx := context.WithValue(req.Context(), SessionCtx, "testSession")
+	ctx = context.WithValue(ctx, models.I18Nctx, i18n)
+	ctx = context.WithValue(ctx, models.Settingsctx, models.BitPackedSettings{Lang: models.English})
+
+	return req.WithContext(ctx)
+}
 
 func TestExtractGameId(t *testing.T) {
 	testCases := []struct {
@@ -69,8 +82,7 @@ func TestExtractGameId(t *testing.T) {
 
 func TestRetrieveGameState(t *testing.T) {
 	req := httptest.NewRequest("GET", "/game/testGameId/", nil)
-	req = req.WithContext(context.WithValue(req.Context(), SessionCtx,
-		"testSession"))
+	req = withGameContext(req)
 	req.SetPathValue("gameId", "testGameId")
 
 	recorder := httptest.NewRecorder()
@@ -99,7 +111,7 @@ func TestCheckHandler(t *testing.T) {
 	// Mock request body
 	requestBody := []byte(`{"Selected": [{"id":1,"word":"first"}, {"id":2,"word":"second"}, {"id":3,"word":"third"}, {"id":4,"word":"fourth"}]}`)
 	req := httptest.NewRequest("POST", "/game/testGameId/check/", bytes.NewBuffer(requestBody))
-	req = req.WithContext(context.WithValue(req.Context(), SessionCtx, "testSession"))
+	req = withGameContext(req)
 	req.SetPathValue("gameId", "testGameId")
 
 	recorder := httptest.NewRecorder()
@@ -115,7 +127,7 @@ func TestCheckHandler(t *testing.T) {
 func TestShuffleHandler(t *testing.T) {
 	requestBody := []byte(`{"Selected": [{"id":1,"word":"first"}, {"id":2,"word":"second"}, {"id":3,"word":"third"}, {"id":4,"word":"fourth"}]}`)
 	req := httptest.NewRequest("POST", "/game/testGameId/shuffle/", bytes.NewBuffer(requestBody))
-	req = req.WithContext(context.WithValue(req.Context(), SessionCtx, "testSession"))
+	req = withGameContext(req)
 	req.SetPathValue("gameId", "testGameId")
 
 	recorder := httptest.NewRecorder()
@@ -130,7 +142,7 @@ func TestShuffleHandler(t *testing.T) {
 
 func TestDeselectHandler(t *testing.T) {
 	req := httptest.NewRequest("POST", "/game/testGameId/deselectAll/", nil)
-	req = req.WithContext(context.WithValue(req.Context(), SessionCtx, "testSession"))
+	req = withGameContext(req)
 	req.SetPathValue("gameId", "testGameId")
 
 	recorder := httptest.NewRecorder()
@@ -145,7 +157,7 @@ func TestDeselectHandler(t *testing.T) {
 
 func TestResetHandler(t *testing.T) {
 	req := httptest.NewRequest("POST", "/game/testGameId/reset/", nil)
-	req = req.WithContext(context.WithValue(req.Context(), SessionCtx, "testSession"))
+	req = withGameContext(req)
 	req.SetPathValue("gameId", "testGameId")
 
 	recorder := httptest.NewRecorder()
@@ -160,7 +172,7 @@ func TestResetHandler(t *testing.T) {
 
 func TestGameHandler(t *testing.T) {
 	req := httptest.NewRequest("GET", "/game/testGameId/", nil)
-	req = req.WithContext(context.WithValue(req.Context(), SessionCtx, "testSession"))
+	req = withGameContext(req)
 	req.SetPathValue("gameId", "testGameId")
 
 	recorder := httptest.NewRecorder()

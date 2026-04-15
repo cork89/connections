@@ -623,7 +623,7 @@ submitWarningClose.addEventListener("click", (event) => closeWarning(event.targe
  * @param {HTMLElement} el 
  */
 function closeWarning(el: HTMLElement) {
-    const warningDiv = el.parentElement
+    const warningDiv = el?.parentElement
     if (warningDiv) {
         warningDiv.style.visibility = "hidden"
     }
@@ -694,7 +694,7 @@ async function submitCategories() {
             const msg = document.getElementById("warning-message")
             if (msg) {
                 msg.innerText = json.failureReason
-                if (msg.parentElement) {
+                if (msg?.parentElement) {
                     msg.parentElement.style.visibility = "visible"
                 }
             }
@@ -761,7 +761,7 @@ function createWord(text: string, inputElement: HTMLInputElement, shouldSave: bo
  */
 function removeWord(element: HTMLElement, findWord: boolean = true, shouldSave: boolean = false) {
     if (findWord) {
-        let idx = currentWords.indexOf(element.parentElement as HTMLDivElement)
+        let idx = currentWords.indexOf(element?.parentElement as HTMLDivElement)
         currentWords.splice(idx, 1)
     }
     element?.parentElement?.remove();

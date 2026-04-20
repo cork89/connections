@@ -7,6 +7,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
+	//_ "net/http/pprof"
 	"os"
 	"strings"
 
@@ -192,5 +194,13 @@ func main() {
 		Addr:    ":8000",
 		Handler: stack(router),
 	}
+
+	// go func() {
+	// 	log.Println("pprof listening on http://localhost:6060/debug/pprof/")
+	// 	if err := http.ListenAndServe("localhost:6060", nil); err != nil {
+	// 		log.Printf("pprof server stopped: %v", err)
+	// 	}
+	// }()
+
 	server.ListenAndServe()
 }

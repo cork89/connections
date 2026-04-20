@@ -27,6 +27,12 @@ var testWords = []models.Word{
 	{Id: 16, Word: "tulip", Category: models.Category{CategoryId: 4, CategoryName: "Flowers"}},
 }
 
+func cloneTestWords() []models.Word {
+	words := make([]models.Word, len(testWords))
+	copy(words, testWords)
+	return words
+}
+
 func (MockDataaccess) createGame(gameId string, words []models.Word, session string) (string, error) {
 	if gameId == "error" {
 		return "", errors.New("create game error")
@@ -35,12 +41,12 @@ func (MockDataaccess) createGame(gameId string, words []models.Word, session str
 }
 
 func (MockDataaccess) getGame(gameId string) ([]models.Word, int64, error) {
-	return testWords, 1, nil
+	return cloneTestWords(), 1, nil
 }
 
 func (MockDataaccess) getGamestate(session string, id int64) (models.GameState, error) {
 	return models.GameState{
-		Words:            testWords,
+		Words:            cloneTestWords(),
 		GuessesRemaining: 4,
 		Hints: models.Hints{
 			Hints: []string{

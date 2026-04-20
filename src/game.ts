@@ -1,18 +1,10 @@
 import { isErrorWithProperty } from "./common.js"
 
 /**
- * An individual word selection.
- */
-type WordSelection = {
-    id: number,
-    word: string
-}
-
-/**
  * The selection request.
  */
 type SelectionRequest = {
-    selected: Array<WordSelection>,
+    selectedIds: Array<number>,
     hintsRevealed: boolean
 }
 
@@ -85,13 +77,10 @@ async function reset() {
  * @returns {SelectionRequest}
  */
 function getSelectionRequest() {
-    const request: SelectionRequest = { selected: [], hintsRevealed: (hintsStage === HintStage.REVEALED_INVIS || hintsStage === HintStage.REVEALED_VIS) ? true : false }
+    const request: SelectionRequest = { selectedIds: [], hintsRevealed: (hintsStage === HintStage.REVEALED_INVIS || hintsStage === HintStage.REVEALED_VIS) ? true : false }
 
     for (const value of currentlySelected) {
-        request.selected.push({
-            id: parseInt(value.slice(4,)),
-            word: value
-        })
+        request.selectedIds.push(parseInt(value.slice(4,)))
     }
     return request
 }

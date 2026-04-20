@@ -85,11 +85,20 @@ func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 	}
 
 	if len(check.Selected) != 4 {
+		if len(check.IDs()) != 4 {
+			w.Write([]byte(NoChange))
+			return
+		}
+	}
+
+	selectedIDs := check.IDs()
+	if len(selectedIDs) != 4 {
 		w.Write([]byte(NoChange))
 		return
 	}
 
-	categories := gameState.DeselectAll().GetSelectedCategories(check.Selected)
+	gameState.DeselectAll().SetSelectedIDs(selectedIDs)
+	categories := gameState.GetSelectedCategories(words)
 	gameState.Hints.Revealed = check.HintsRevealed
 
 	var checkResponse = models.SelectedResponse{Result: models.Other}
@@ -98,7 +107,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 		if len(v) == 3 {
 			checkResponse.Result = models.Three
 		} else if len(v) == 4 {
-			gameState.SetAnswers(k).DeselectAll()
+			gameState.SetAnswers(words, k).DeselectAll()
 			checkResponse.Result = models.Four
 			success = true
 		}
@@ -107,9 +116,10 @@ func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 	if !success && gameState.GuessesRemaining > 0 {
 		gameState.GuessesRemaining--
 	} else if success {
-		gameState.Shuffle()
+		gameState.Shuffle(words)
 	}
 
+	gameState = gameState.Hydrate(words)
 	checkResponse.GameState = gameState
 	checkResponse.DetermineStatus()
 
@@ -118,11 +128,12 @@ func checkHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 	checkResponse.GameOverData = gameOverData
 
 	if gameOverData.IsGameOver {
-		categories = checkResponse.GameState.GetSelectedCategories(words)
+		categories = checkResponse.GameState.GetAllCategories(words)
 		for k := range categories {
-			checkResponse.GameState.SetAnswers(k)
+			checkResponse.GameState.SetAnswers(words, k)
 		}
 		checkResponse.GameState.DeselectAll()
+		checkResponse.GameState = checkResponse.GameState.Hydrate(words)
 		// checkResponse.GameState = gameState
 	}
 
@@ -156,8 +167,9 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request, dataacess DataAccess
 		return
 	}
 
-	gameState.SetSelected(check.Selected).Shuffle()
+	gameState.SetSelectedIDs(check.IDs()).Shuffle(requestData.Game)
 	gameState.Hints.Revealed = check.HintsRevealed
+	gameState = gameState.Hydrate(requestData.Game)
 
 	go dataacess.updateGamestate(gameState, session, id)
 
@@ -183,6 +195,7 @@ func deselectHandler(w http.ResponseWriter, r *http.Request, dataacess DataAcces
 	gameState, session, id := requestData.GameState, requestData.Session, requestData.Id
 
 	gameState.DeselectAll()
+	gameState = gameState.Hydrate(requestData.Game)
 	err = dataacess.updateGamestate(gameState, session, id)
 
 	if err != nil {
@@ -214,9 +227,10 @@ func resetHandler(w http.ResponseWriter, r *http.Request, dataaccess DataAccess)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	hints := models.Hints{Revealed: false, Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
-	gameState := models.GameState{Words: words, GuessesRemaining: 4, Hints: hints}
-	gameState.Shuffle()
+	hints := models.BuildHints(words, false)
+	gameState := models.NewGameState(words, 4, hints)
+	gameState.Shuffle(words)
+	gameState = gameState.Hydrate(words)
 	err = dataaccess.initGamestate(gameState, session, id)
 
 	if err != nil {
@@ -269,31 +283,18 @@ func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAcce
 	gameState, err := dataaccess.getGamestate(session, id)
 
 	if err != nil {
-		hints := models.Hints{Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
+		hints := models.BuildHints(words, false)
 		if settings.UnhideHints {
 			hints.Revealed = true
 		}
 
-		gameState = models.GameState{Words: words, GuessesRemaining: 4, Hints: hints}
-		gameState.Shuffle()
+		gameState = models.NewGameState(words, 4, hints)
+		gameState.Shuffle(words)
+		gameState = gameState.Hydrate(words)
 		go dataaccess.initGamestate(gameState, session, id)
 	}
 
-	if gameState.Hints.Hints == nil {
-		hints := models.Hints{Hints: []string{words[0].Word, words[4].Word, words[8].Word, words[12].Word}}
-		if settings.UnhideHints {
-			hints.Revealed = true
-		}
-
-		gameState.Hints = hints
-		err = dataaccess.updateGamestate(gameState, session, id)
-
-		if err != nil {
-			log.Println("failed to update gamestate, err: ", err)
-			return nil, err
-		}
-	}
-
+	gameState = gameState.Hydrate(words)
 	gameResponse := models.SelectedResponse{GameState: gameState}
 	gameResponse.DetermineStatus()
 
@@ -302,11 +303,12 @@ func getGameResponse(w http.ResponseWriter, r *http.Request, dataaccess DataAcce
 	gameResponse.GameOverData = gameOverData
 
 	if gameOverData.IsGameOver {
-		categories := gameResponse.GameState.GetSelectedCategories(words)
+		categories := gameResponse.GameState.GetAllCategories(words)
 		for k := range categories {
-			gameResponse.GameState.SetAnswers(k)
+			gameResponse.GameState.SetAnswers(words, k)
 		}
 		gameResponse.GameState.DeselectAll()
+		gameResponse.GameState = gameResponse.GameState.Hydrate(words)
 	}
 
 	debugParam := r.FormValue("debug")

@@ -1,6 +1,6 @@
 module com.github.cork89/connections
 
-go 1.23.4
+go 1.27.1
 
 require github.com/mattn/go-sqlite3 v1.14.24
 

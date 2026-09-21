@@ -202,7 +202,7 @@ footer a {
 }
 
 #sidebar-hamburger {
-    position: absolute;
+    position: fixed;
     z-index: 99;
     top: 8px;
     left: 8px;

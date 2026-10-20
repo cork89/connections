@@ -1,0 +1,65 @@
+# Connections Puzzle Maker
+
+> Create and play custom Connections-style word puzzles at https://hearteyesemoji.dev. A puzzle has 16 words split into 4 hidden categories of 4 words each. Players have to work out which words belong together.
+
+This file tells AI agents how to create a puzzle for a user and give them a link to play it. No account or API key is required.
+
+## Create a puzzle
+
+Send a POST request to `https://hearteyesemoji.dev/create/` with a JSON body:
+
+```
+POST https://hearteyesemoji.dev/create/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "yellow": { "category": "Shades of red", "words": ["CRIMSON", "SCARLET", "RUBY", "MAROON"] },
+  "green":  { "category": "Poker terms",   "words": ["FOLD", "RAISE", "CALL", "BLIND"] },
+  "blue":   { "category": "___fish",       "words": ["SWORD", "STAR", "CAT", "JELLY"] },
+  "purple": { "category": "Hidden animals", "words": ["SCOWL", "BATON", "CRATE", "PANTS"] },
+  "gameId": ""
+}
+```
+
+Rules:
+
+- All four colors (`yellow`, `green`, `blue`, `purple`) are required.
+- Each color needs a non-empty `category` and exactly 4 `words`.
+- All 16 words must be unique (the check ignores case).
+- Keep each word to 20 characters or fewer.
+- The whole request body must be under 5000 bytes, and the request must send a `Content-Length` header.
+- Difficulty goes from easiest to hardest: yellow, green, blue, purple. Put the straightforward category in yellow and the trickiest one (wordplay, hidden words, fill-in-the-blank) in purple.
+- Use words that could plausibly fit more than one category. Red herrings make the puzzle fun.
+- `gameId` is optional. Leave it as `""` to get a random ID. If you set a custom ID that is already taken, the server assigns a random one instead.
+
+## Response
+
+On success (HTTP 200):
+
+```
+{ "success": true, "gameId": "0192f3a1-7c2e-7b4d-9a1e-3f5c2d8e6b10" }
+```
+
+On a validation failure (HTTP 422):
+
+```
+{ "success": false, "failureReason": "Not enough words in category: [blue]; Duplicate words found: [STAR]" }
+```
+
+If validation fails, fix the problems named in `failureReason` and try again.
+
+## Give the user a link
+
+Build the link from the returned `gameId`:
+
+```
+https://hearteyesemoji.dev/game/{gameId}/
+```
+
+Give the user this link. Don't tell them the categories or which words go together, because that would spoil the puzzle. Only reveal the answers if they ask.
+
+## Other pages
+
+- [Create a puzzle (web UI)](https://hearteyesemoji.dev/create/): build a puzzle by hand in the browser
+- [Random puzzle](https://hearteyesemoji.dev/random/): play a random puzzle someone else made

@@ -170,6 +170,9 @@ func main() {
 	router.HandleFunc("GET /robots.txt", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/robots.txt")
 	})
+	router.HandleFunc("GET /llms.txt", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/llms.txt")
+	})
 
 	router.HandleFunc("GET /settings/", settingsHandler)
 	router.HandleFunc("POST /settings/", settingsPostHandler)
